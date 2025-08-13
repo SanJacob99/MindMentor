@@ -3,7 +3,7 @@ from pydantic import AnyUrl
 from typing import Optional
 
 class Settings(BaseSettings):
-    DATABASE_URL: AnyUrl
+    DATABASE_URL: str
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8000
 
