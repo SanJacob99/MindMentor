@@ -1,68 +1,97 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..db import get_db
-from .. import models, schemas
+from sqlalchemy.dialects.postgresql import insert as pg_insert
+
+from app.db import get_db
+from app.schemas import JournalCreate
+from app.models import Journal, Tag, JournalTag, User  # JournalTag is a Table
+from .auth import get_current_user
 
 router = APIRouter(prefix="/journals", tags=["journals"])
 
-@router.post("", response_model=schemas.JournalOut, status_code=201)
-async def create_journal(payload: schemas.JournalCreate, db: AsyncSession = Depends(get_db)):
-    # Ensure user exists
-    user = await db.get(models.User, payload.user_id)
-    if not user:
-        raise HTTPException(404, "User not found")
 
-    journal = models.Journal(user_id=payload.user_id, content=payload.content, mood=payload.mood)
-    db.add(journal)
-    # Handle tags by name (create if missing)
-    tag_names = [t.strip() for t in (payload.tags or []) if t.strip()]
-    if tag_names:
-        # fetch existing
-        res = await db.execute(select(models.Tag).where(models.Tag.name.in_(tag_names)))
-        existing = {t.name: t for t in res.scalars()}
-        # create missing
-        for name in tag_names:
-            if name not in existing:
-                t = models.Tag(name=name)
-                db.add(t)
-                existing[name] = t
-        await db.flush()
-        journal.tags = list(existing.values())
+@router.post("", status_code=201)
+async def create_journal(
+    payload: JournalCreate,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    """
+    Create a journal entry for the authenticated user.
+    - Upserts tags by name (lowercased)
+    - Links via JournalTag (composite PK: journal_id + tag_id)
+    - Uses ON CONFLICT DO NOTHING to avoid duplicates
+    """
+    print(payload)
+    # 1) Create the journal row
+    j = Journal(user_id=user.user_id, content=payload.content, mood=payload.mood)
+    db.add(j)
+    await db.flush()  # get j.journal_id
+
+    # 2) Upsert + link tags
+    for raw in (payload.tags or []):
+        name = (raw or "").strip().lower()
+        if not name:
+            continue
+
+        # get-or-create tag
+        res = await db.execute(select(Tag).where(Tag.name == name))
+        tag = res.scalar_one_or_none()
+        if not tag:
+            tag = Tag(name=name)
+            db.add(tag)
+            await db.flush()  # get tag.tag_id
+
+        # link in association table (JournalTag is a Table here)
+        stmt = (
+            pg_insert(JournalTag)
+            .values(journal_id=j.journal_id, tag_id=tag.tag_id)
+            .on_conflict_do_nothing(index_elements=["journal_id", "tag_id"])
+        )
+        await db.execute(stmt)
 
     await db.commit()
-    await db.refresh(journal)
-    # shape response with tag names
-    return schemas.JournalOut(
-        journal_id=journal.journal_id,
-        user_id=journal.user_id,
-        content=journal.content,
-        mood=journal.mood,
-        created_at=journal.created_at,
-        tags=[t.name for t in journal.tags] if journal.tags else []
-    )
+    return {"journal_id": j.journal_id}
 
-@router.get("", response_model=list[schemas.JournalOut])
+
+@router.get("", summary="List journals for current user")
 async def list_journals(
-    user_id: str | None = Query(default=None),
-    limit: int = Query(default=50, ge=1, le=200),
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
     db: AsyncSession = Depends(get_db),
+    user: User = Depends(get_current_user),
 ):
-    q = select(models.Journal).order_by(models.Journal.created_at.desc()).limit(limit)
-    if user_id:
-        q = q.where(models.Journal.user_id == user_id)
-    res = await db.execute(q)
-    journals = res.scalars().unique().all()
-
-    # eager-load tags names (they're lazy=selectin, so access populates)
+    q = (
+        select(Journal)
+        .where(Journal.user_id == user.user_id)
+        .order_by(Journal.created_at.desc())
+        .limit(limit)
+        .offset(offset)
+    )
+    rows = (await db.execute(q)).scalars().all()
     return [
-        schemas.JournalOut(
-            journal_id=j.journal_id,
-            user_id=j.user_id,
-            content=j.content,
-            mood=j.mood,
-            created_at=j.created_at,
-            tags=[t.name for t in j.tags] if j.tags else []
-        )
-        for j in journals
+        {
+            "journal_id": r.journal_id,
+            "content": r.content,
+            "mood": r.mood,
+            "created_at": r.created_at,
+        }
+        for r in rows
     ]
+
+
+@router.delete("/{journal_id}", status_code=204)
+async def delete_journal(
+    journal_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    q = delete(Journal).where(
+        Journal.journal_id == journal_id, Journal.user_id == user.user_id
+    )
+    res = await db.execute(q)
+    if res.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    await db.commit()

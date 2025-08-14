@@ -9,7 +9,11 @@ async def health():
     return {"status": "ok"}
 
 
-@router.get("/health/db")
+@router.get("/db")
 async def db_health(session = Depends(get_session)):
     await session.execute(text("SELECT 1"))
+    return {"ok": True}
+
+@router.get("/ping")
+def ping():
     return {"ok": True}
