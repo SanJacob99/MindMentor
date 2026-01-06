@@ -1,11 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
 
-const API_URL = 'http://localhost:3000'; // MVP: assume localhost or use IP for physical device
+// Replace '172.20.10.2' with your computer's local IP if this changes (ipconfig)
+const API_URL = 'http://172.20.10.2:3000';
 
 export const api = {
   async request(method: string, endpoint: string, body?: any) {
+   
     const token = await SecureStore.getItemAsync('accessToken');
-    
     const headers: any = {
       'Content-Type': 'application/json',
     };
@@ -18,7 +19,6 @@ export const api = {
       headers,
       body: body ? JSON.stringify(body) : undefined,
     });
-
     if (response.status === 401) {
       // Handle logout or throw
       await SecureStore.deleteItemAsync('accessToken');
@@ -26,7 +26,7 @@ export const api = {
 
     const data = await response.json();
     if (!response.ok) {
-        throw new Error(data.error || 'API Request Failed');
+        throw new Error(data.error || JSON.stringify(data) || 'API Request Failed');
     }
     return data;
   },
