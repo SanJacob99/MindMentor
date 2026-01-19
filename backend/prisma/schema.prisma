@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  preferences Json?    // Stores reminders, timezone
+  hasCompletedOnboarding Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  entries         JournalEntry[]
+  recommendations Recommendation[]
+  feedbacks       RecommendationFeedback[]
+}
+
+model JournalEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  mood      Int
+  stress    Int
+  energy    Int
+  text      String?
+  tags      String[]
+
+  createdAt DateTime @default(now())
+}
+
+model Recommendation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  type      String   // e.g., 'WALK', 'BREATHE'
+  rationale String
+  confidence Float
+  status    String   // 'PENDING', 'ACCEPTED', 'DISMISSED'
+
+  feedbacks RecommendationFeedback[]
+
+  createdAt DateTime @default(now())
+}
+
+model RecommendationFeedback {
+  id               String         @id @default(uuid())
+  recommendationId String
+  recommendation   Recommendation @relation(fields: [recommendationId], references: [id])
+  userId           String
+  user             User           @relation(fields: [userId], references: [id])
+  
+  outcome          String         // 'HELPED', 'NOT_HELPED'
+  createdAt        DateTime       @default(now())
+}

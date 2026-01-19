@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
-
+//authStore should not become a second source of truth for user profile
 interface AuthState {
   token: string | null;
   isLoading: boolean;

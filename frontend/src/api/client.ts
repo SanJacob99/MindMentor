@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 
-// Replace '172.20.10.2' with your computer's local IP if this changes (ipconfig)
-const API_URL = 'http://172.20.10.2:3000';
+//Run ipconfig and update the file with the "IPv4 Address" of your Wi-Fi adapter
+const API_URL = 'http://192.168.1.170:3000';
 
 export const api = {
   async request(method: string, endpoint: string, body?: any) {
