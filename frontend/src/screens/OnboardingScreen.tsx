@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { api } from '../api/client';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import { useQueryClient } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import MindMentorLogo from '../../assets/MindMentorLogo.svg';
 
 type OnboardingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Onboarding'>;
 
 const STEPS = [
   {
-    title: "What is MindMentor?",
-    description: "MindMentor is your daily companion for mental wellness. It helps you track your mood, journal your thoughts, and provides personalized recommendations to improve your day."
+    title: "Understand your mind.",
+    description: "MindMentor is a quiet space to record how you feel. There are no streaks to keep, no levels to gain, and no judgment. Just simple insights to help you find balance."
   },
   {
     title: "How it works",
@@ -56,16 +57,11 @@ export default function OnboardingScreen() {
       const preferences = {
         reminderTime,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-        // Backend handles hasCompletedOnboarding: true automatically
       };
       
       const updatedUser = await api.request('POST', '/users/preferences', preferences);
       
-      // Update React Query cache with the returned UserDTO
       queryClient.setQueryData(['user'], updatedUser);
-      
-      // Navigation should be handled by RootNavigator reacting to user state change,
-      // but we can also manually reset if needed. RootNavigator check is safer.
       
     } catch (error: any) {
       Alert.alert('Error', error.message || 'Failed to save preferences');
@@ -77,17 +73,9 @@ export default function OnboardingScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.progressContainer}>
-          {STEPS.map((_, index) => (
-            <View 
-              key={index} 
-              style={[
-                styles.dot, 
-                index === currentStep ? styles.activeDot : null,
-                index < currentStep ? styles.completedDot : null
-              ]} 
-            />
-          ))}
+        
+        <View style={styles.logoContainer}>
+             <MindMentorLogo width={200} height={200} />
         </View>
 
         <Text style={styles.title}>{STEPS[currentStep].title}</Text>
@@ -101,6 +89,7 @@ export default function OnboardingScreen() {
               value={reminderTime}
               onChangeText={setReminderTime}
               placeholder="09:00"
+              placeholderTextColor="#666"
               keyboardType="numbers-and-punctuation"
             />
           </View>
@@ -108,18 +97,33 @@ export default function OnboardingScreen() {
       </View>
 
       <View style={styles.footer}>
-        {currentStep > 0 ? (
+        <View style={styles.progressContainer}>
+          {STEPS.map((_, index) => (
+            <View 
+              key={index} 
+              style={[
+                styles.dot, 
+                index === currentStep ? styles.activeDot : null,
+              ]} 
+            />
+          ))}
+        </View>
+
+        {/* Only show Back button if not on the first step, or keep layout consistent */}
+        {currentStep > 0 && (
            <TouchableOpacity onPress={handleBack} style={styles.buttonSecondary} disabled={saving}>
              <Text style={styles.buttonTextSecondary}>Back</Text>
            </TouchableOpacity>
-        ) : <View style={{width: 20}} />} 
+        )} 
 
         <TouchableOpacity 
           onPress={handleNext} 
-          style={styles.buttonPrimary}
+          style={[styles.buttonPrimary, currentStep === 0 && styles.buttonPrimaryFull]}
           disabled={saving}
         >
-          <Text style={styles.buttonTextPrimary}>{currentStep === 3 ? (saving ? "Getting Started..." : "Get Started") : "Next"}</Text>
+          <Text style={styles.buttonTextPrimary}>
+            {currentStep === 0 ? "START" : (currentStep === STEPS.length - 1 ? (saving ? "Getting Started..." : "Get Started") : "Next")}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -127,22 +131,23 @@ export default function OnboardingScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 20 },
+  container: { flex: 1, backgroundColor: '#0F172A', padding: 20 },
   content: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 },
-  progressContainer: { flexDirection: 'row', marginBottom: 40 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#E0E0E0', marginHorizontal: 5 },
-  activeDot: { backgroundColor: '#4A90E2', width: 20 },
-  completedDot: { backgroundColor: '#4A90E2' },
-  title: { fontSize: 26, fontWeight: 'bold', marginBottom: 20, textAlign: 'center', color: '#333' },
-  description: { fontSize: 16, lineHeight: 24, textAlign: 'center', color: '#666' },
+  logoContainer: { marginBottom: 40 },
+  progressContainer: { flexDirection: 'row', marginBottom: 20 },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#334155', marginHorizontal: 4 },
+  activeDot: { backgroundColor: '#3B82F6', width: 24 },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 16, textAlign: 'center', color: '#FFFFFF' },
+  description: { fontSize: 16, lineHeight: 24, textAlign: 'center', color: '#94A3B8' },
   formContainer: { width: '100%', marginTop: 30 },
-  label: { marginBottom: 8, fontSize: 14, fontWeight: '600', color: '#333' },
-  input: { borderWidth: 1, borderColor: '#ddd', padding: 15, borderRadius: 10, fontSize: 16, backgroundColor: '#FAFAFA' },
-  footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 },
-  buttonPrimary: { backgroundColor: '#4A90E2', paddingVertical: 15, paddingHorizontal: 30, borderRadius: 30, minWidth: 120, alignItems: 'center' },
-  buttonSecondary: { paddingVertical: 15, paddingHorizontal: 20 },
-  buttonTextPrimary: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-  buttonTextSecondary: { color: '#666', fontSize: 16, fontWeight: '600' },
+  label: { marginBottom: 8, fontSize: 14, fontWeight: '600', color: '#CBD5E1' },
+  input: { borderWidth: 1, borderColor: '#334155', padding: 15, borderRadius: 12, fontSize: 16, backgroundColor: '#1E293B', color: '#FFF' },
+  footer: { width: '100%', alignItems: 'center', paddingBottom: 20 },
+  buttonPrimary: { backgroundColor: '#3B82F6', paddingVertical: 16, paddingHorizontal: 32, borderRadius: 30, minWidth: 140, alignItems: 'center' },
+  buttonPrimaryFull: { width: '100%' }, 
+  buttonSecondary: { position: 'absolute', top: 20, left: 0, padding: 15 }, // Adjusted top to not overlap with dots if they are top of footer
+  buttonTextPrimary: { color: '#fff', fontSize: 16, fontWeight: 'bold', letterSpacing: 1 },
+  buttonTextSecondary: { color: '#94A3B8', fontSize: 16, fontWeight: '600' },
 });
 
 
