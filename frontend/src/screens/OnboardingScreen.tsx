@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Switch, TextInput } from 'react-native';
 import { api } from '../api/client';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -7,7 +7,7 @@ import { RootStackParamList } from '../navigation/RootNavigator';
 import { useQueryClient } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MindMentorLogo from '../../assets/MindMentorLogo.svg';
-import { CheckCircle, Monitor, Lightbulb, ChevronLeft, BriefcaseMedical, ClipboardList, Bot } from 'lucide-react-native';
+import { CheckCircle, Monitor, Lightbulb, BriefcaseMedical, ClipboardList, Bot } from 'lucide-react-native';
 
 type OnboardingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Onboarding'>;
 
@@ -20,20 +20,20 @@ const STEPS = [
     title: "A simple daily rhythm",
     description: "Small habits build resilience. Here is how MindMentor helps you find clarity.",
     items: [
-      { 
-        icon: CheckCircle, 
-        title: "Check In", 
-        description: "Log your mood in seconds. No journaling required, just a moment of pause." 
+      {
+        icon: CheckCircle,
+        title: "Check In",
+        description: "Log your mood in seconds. No journaling required, just a moment of pause."
       },
-      { 
-        icon: Monitor, 
-        title: "See Patterns", 
-        description: "Over time, clarity emerges from the noise. Understand your triggers and peaks." 
+      {
+        icon: Monitor,
+        title: "See Patterns",
+        description: "Over time, clarity emerges from the noise. Understand your triggers and peaks."
       },
-      { 
-        icon: Lightbulb, 
-        title: "Find Balance", 
-        description: "We suggest small, actionable steps based on your emotional data." 
+      {
+        icon: Lightbulb,
+        title: "Find Balance",
+        description: "We suggest small, actionable steps based on your emotional data."
       }
     ]
   },
@@ -59,16 +59,17 @@ const STEPS = [
     ]
   },
   {
-    title: "Your Preferences",
-    description: "Let's personalize your experience. Set a time for your daily check-in reminder."
+    title: "Personalize your space",
+    description: "MindMentor adapts to your schedule. You can always change this later."
   }
 ];
 
 export default function OnboardingScreen() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [reminderTime, setReminderTime] = useState('09:00');
+  const [reminderTime, setReminderTime] = useState('08:00');
+  const [checkInEnabled, setCheckInEnabled] = useState(true);
   const [saving, setSaving] = useState(false);
-  
+
   const queryClient = useQueryClient();
   const navigation = useNavigation<OnboardingScreenNavigationProp>();
 
@@ -93,11 +94,11 @@ export default function OnboardingScreen() {
         reminderTime,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
       };
-      
+
       const updatedUser = await api.request('POST', '/users/preferences', preferences);
-      
+
       queryClient.setQueryData(['user'], updatedUser);
-      
+
     } catch (error: any) {
       Alert.alert('Error', error.message || 'Failed to save preferences');
     } finally {
@@ -123,6 +124,7 @@ export default function OnboardingScreen() {
             </Text>
           </View>
         ) : (
+          //Header  
           <View className="flex-1 px-6 pt-2 ">
             <View className="mb-8">
               <View className="flex-row items-center justify-center mb-4 relative min-h-[44px]">
@@ -136,19 +138,19 @@ export default function OnboardingScreen() {
                 </View>
               </View>
             </View>
-
+            {/*Body*/}
             <View className="flex-1 items-center justify-start w-full  ">
               {currentStep === 1 && currentStepData.items && (
                 <View className="w-full ">
                   {currentStepData.items.map((item, index) => (
                     <View key={index} className="flex-row mb-20 relative  ">
                       {index !== currentStepData.items.length - 1 && (
-                        <View 
-                          className="absolute left-[20px]  w-[1px] bg-slate-700" 
-                          style={{ bottom: -80,top:35 }}
+                        <View
+                          className="absolute left-[20px]  w-[1px] bg-slate-700"
+                          style={{ bottom: -80, top: 35 }}
                         />
                       )}
-                      
+
                       <View className="mr-4 items-center">
                         <View className="w-10 h-10 rounded-full bg-slate-800 items-center justify-center border border-slate-700">
                           <item.icon size={20} color="#3B82F6" />
@@ -178,29 +180,44 @@ export default function OnboardingScreen() {
                       </View>
                     </View>
                   ))}
-                  
+
 
                 </View>
               )}
 
               {currentStep === 3 && (
-                <View className="w-full mt-4">
-                  <Text className="mb-2 text-sm font-semibold text-slate-300">Daily Reminder Time (HH:MM)</Text>
-                  <TextInput
-                    className="border border-slate-700 p-4 rounded-xl text-base bg-slate-800 text-white"
-                    value={reminderTime}
-                    onChangeText={setReminderTime}
-                    placeholder="09:00"
-                    placeholderTextColor="#666"
-                    keyboardType="numbers-and-punctuation"
-                  />
+                <View className="w-full">
+                  <Text className="text-slate-400 font-semibold mb-4 text-sm">Gentle Reminder</Text>
+                  <View className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden ">
+                    <View className="p-5 flex-row justify-between items-center">
+                      <View>
+                        <Text className="text-white text-base font-bold ">Daily Check-in</Text>
+                        <Text className="text-slate-400 text-xs">Build a consistent habit</Text>
+                      </View>
+                      <Switch
+                        trackColor={{ false: "#334155", true: "#3B82F6" }}
+                        thumbColor={checkInEnabled ? "#ffffff" : "#f4f3f4"}
+                        ios_backgroundColor="#334155"
+                        onValueChange={setCheckInEnabled}
+                        value={checkInEnabled}
+                      />
+                    </View>
+                    {checkInEnabled && (
+                      <View className="p-5 flex-row justify-between items-center bg-slate-800/50 " style={{ borderTopWidth: 1, borderTopColor: "rgba(51, 65, 85, 0.5)" }}>
+                        <Text className="text-slate-300 text-base">Time</Text>
+                        <View className="bg-slate-700/50 px-3 py-1 rounded-md">
+                          <Text className="text-white font-semibold text-lg hover:text-blue-400">08:00 <Text className="text-sm text-slate-400">AM</Text></Text>
+                        </View>
+                      </View>
+                    )}
+                  </View>
                 </View>
               )}
             </View>
           </View>
         )}
       </View>
-
+      {/* Footer */}
       <View className="w-full items-center px-5 pb-5 ">
         {currentStep === 2 && currentStepData.items && (
           <Text className="text-center text-white text-xs mb-8">
@@ -209,18 +226,17 @@ export default function OnboardingScreen() {
         )}
         <View className="flex-row mb-5">
           {STEPS.map((_, index) => (
-            <View 
-              key={index} 
+            <View
+              key={index}
               className={`h-2 rounded-full mx-1 ${index === currentStep ? 'bg-blue-500 w-6' : 'bg-slate-700 w-2'}`}
             />
           ))}
         </View>
 
-        {/* Back button removed from here */}
 
-        <TouchableOpacity 
-          onPress={handleNext} 
-          className={`bg-blue-500 py-4 px-8 rounded-full items-center min-w-[140px] ${currentStep === 0 || currentStep === 1 ? 'w-full' : ''}`}
+        <TouchableOpacity
+          onPress={handleNext}
+          className="bg-blue-500 py-4 px-8 rounded-full items-center min-w-[140px] w-full"
           disabled={saving}
         >
           <Text className="text-white text-base font-bold tracking-widest uppercase">
