@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import jwt from 'jsonwebtoken';
+import { env } from '../config/env';
 
 export interface AuthRequest extends FastifyRequest {
   user?: {
@@ -19,7 +20,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
       return reply.status(401).send({ error: 'Invalid token format' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as { userId: string };
+    const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string };
     (request as AuthRequest).user = decoded;
   } catch (error) {
     return reply.status(401).send({ error: 'Invalid or expired token' });

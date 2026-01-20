@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import { env } from './config/env';
 
 const fastify = Fastify({ logger: true });
 const prisma = new PrismaClient();
@@ -24,9 +25,8 @@ const start = async () => {
       return { status: 'ok' };
     });
 
-    const port = parseInt(process.env.PORT || '3000');
-    await fastify.listen({ port, host: '0.0.0.0' });
-    console.log(`Server listening on ${port}`);
+    await fastify.listen({ port: env.PORT, host: '0.0.0.0' });
+    console.log(`Server listening on ${env.PORT}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
