@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import prisma from '../utils/db';
 import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { z } from 'zod';
+import { preferencesSchema } from '../schemas/authSchemas';
 
 // Define UserDTO type for consistency (could be shared in a common types file)
 interface UserDTO {
@@ -36,7 +37,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
   fastify.post('/preferences', async (request, reply) => {
     try {
-      const preferences = request.body; // Validate with zod if structure known
+      const preferences = preferencesSchema.partial().parse(request.body);
       const userId = (request as AuthRequest).user!.userId;
       
       const existingUser = await prisma.user.findUnique({ where: { id: userId }, select: { preferences: true } });
@@ -65,6 +66,9 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
       return reply.send(userDTO);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return reply.status(400).send({ error: (error as any).errors });
+      }
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Internal Server Error' });
     }
