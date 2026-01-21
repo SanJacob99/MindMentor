@@ -4,6 +4,7 @@ import { loginSchema, signupSchema } from '../schemas/authSchemas';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { hashPassword, verifyPassword } from '../utils/password';
+import { env } from '../config/env';
 
 export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post('/signup', async (request, reply) => {
@@ -25,7 +26,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         },
       });
 
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      const token = jwt.sign({ userId: user.id }, env.JWT_SECRET, { expiresIn: '7d' });
 
       // Return UserDTO
       const userDTO = {
@@ -59,7 +60,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         return reply.status(401).send({ error: 'Invalid credentials' });
       }
 
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+      const token = jwt.sign({ userId: user.id }, env.JWT_SECRET, { expiresIn: '7d' });
 
       const userDTO = {
         id: user.id,
