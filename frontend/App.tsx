@@ -4,10 +4,11 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import RootNavigator from './src/navigation/RootNavigator';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const queryClient = new QueryClient();
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 
 export default function App() {
   return (
