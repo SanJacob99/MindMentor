@@ -1,10 +1,13 @@
 import * as SecureStore from 'expo-secure-store';
+import Constants from 'expo-constants';
 
-//Run ipconfig and update the file with the "IPv4 Address" of your Wi-Fi adapter
-const API_URL = 'http://172.20.10.2:3000';
+const API_URL = Constants.expoConfig?.extra?.apiUrl;
 
 export const api = {
   async request(method: string, endpoint: string, body?: any) {
+    if (!API_URL) {
+      throw new Error('API_URL is not configured');
+    }
    
     const token = await SecureStore.getItemAsync('accessToken');
     const headers: any = {
