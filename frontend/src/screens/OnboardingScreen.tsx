@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import MindMentorLogo from '../../assets/MindMentorLogo.svg';
 import { CheckCircle, Monitor, Lightbulb, BriefcaseMedical, ClipboardList, Bot } from 'lucide-react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const { width } = Dimensions.get('window');
 
@@ -69,7 +70,13 @@ const STEPS = [
 
 export default function OnboardingScreen() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [reminderTime, setReminderTime] = useState('08:00');
+
+  // Initialize date to 8:00 AM today
+  const [reminderTime, setReminderTime] = useState(() => {
+    const d = new Date();
+    d.setHours(8, 0, 0, 0);
+    return d;
+  });
   const [checkInEnabled, setCheckInEnabled] = useState(true);
   const [saving, setSaving] = useState(false);
   const flatListRef = useRef<Animated.FlatList<any>>(null);
@@ -106,8 +113,13 @@ export default function OnboardingScreen() {
   const handleFinish = async () => {
     setSaving(true);
     try {
+      // Format time as HH:mm
+      const hours = reminderTime.getHours().toString().padStart(2, '0');
+      const minutes = reminderTime.getMinutes().toString().padStart(2, '0');
+      const timeString = `${hours}:${minutes}`;
+
       const preferences = {
-        reminderTime,
+        reminderTime: timeString,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
       };
 
@@ -118,6 +130,12 @@ export default function OnboardingScreen() {
       Alert.alert('Error', error.message || 'Failed to save preferences');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleTimeChange = (event: any, selectedDate?: Date) => {
+    if (selectedDate) {
+      setReminderTime(selectedDate);
     }
   };
 
@@ -213,10 +231,17 @@ export default function OnboardingScreen() {
                       />
                     </View>
                     {checkInEnabled && (
-                      <View className="p-5 flex-row justify-between items-center bg-slate-800/50" style={{ borderTopWidth: 1, borderTopColor: "rgba(51, 65, 85, 0.5)" }}>
-                        <Text className="text-slate-300 text-base">Time</Text>
-                        <View className="bg-slate-700/50 px-3 py-1 rounded-md">
-                          <Text className="text-white font-semibold text-lg hover:text-blue-400">08:00 <Text className="text-sm text-slate-400">AM</Text></Text>
+                      <View className="bg-slate-800/50" style={{ borderTopWidth: 1, borderTopColor: "rgba(51, 65, 85, 0.5)" }}>
+                        <View className="w-full items-center justify-center py-4">
+                          <DateTimePicker
+                            value={reminderTime}
+                            mode="time"
+                            display="spinner"
+                            onChange={handleTimeChange}
+                            textColor="white"
+                            themeVariant="dark"
+                            style={{ height: 150, width: "100%" }}
+                          />
                         </View>
                       </View>
                     )}
