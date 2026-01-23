@@ -28,8 +28,8 @@ export default function SignUpScreen() {
       // We rely on RootNavigator logic. 
       // User might need to go to Onboarding manually if we don't track it.
       // But for MVP, we just go to authenticated stack.
-    } catch (error: any) {
-      Alert.alert('Signup Failed', error.message);
+    } catch (error) {
+      Alert.alert('Signup Failed', error instanceof Error ? error.message : "An unknown error occurred");
     } finally {
       setLoading(false);
     }

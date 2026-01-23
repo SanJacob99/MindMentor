@@ -24,8 +24,8 @@ export default function SignInScreen() {
     try {
       const data = await api.post('/auth/login', { email, password });
       await setToken(data.accessToken);
-    } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+    } catch (error) {
+      Alert.alert('Login Failed', error instanceof Error ? error.message : "An unknown error occurred");
     } finally {
       setLoading(false);
     }
