@@ -59,8 +59,8 @@ export default async function userRoutes(fastify: FastifyInstance) {
           hasCompletedOnboarding: true
         },
       });
-
-      const userDTO: UserDTO = {
+      // Is DTO needed?
+      const userDTO: UserDTO = { 
         id: user.id,
         email: user.email,
         preferences: user.preferences,

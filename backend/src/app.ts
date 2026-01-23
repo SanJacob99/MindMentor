@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { env } from './config/env';
 
 // Trust proxy is required for correct IP rate limiting when behind a load balancer
+//TODO: Remember to set the variables of trusted ip when in production, evaluate if environment variables are the best way to do this
 const fastify = Fastify({
   logger: true,
   trustProxy: true

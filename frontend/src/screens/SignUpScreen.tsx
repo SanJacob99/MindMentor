@@ -58,6 +58,8 @@ export default function SignUpScreen() {
   );
 }
 
+// TODO: Move styles to nativewind or separete file
+
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 20 },
   title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },

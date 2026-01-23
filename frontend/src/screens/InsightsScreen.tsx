@@ -13,15 +13,15 @@ export default function InsightsScreen() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <ActivityIndicator style={{flex:1}} />;
-  if (!data) return <Text style={{padding:20}}>No data available</Text>;
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  if (!data) return <Text style={{ padding: 20 }}>No data available</Text>;
 
   const maxVal = Math.max(...(data.data || [0]), 10);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Last 7 Days (Mood)</Text>
-      
+
       <View style={styles.chartContainer}>
         {data.labels.map((label: string, index: number) => {
           const value = data.data[index];
@@ -42,6 +42,8 @@ export default function InsightsScreen() {
     </View>
   );
 }
+
+// TODO: Move styles to nativewind or separete file
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, paddingTop: 50 },
