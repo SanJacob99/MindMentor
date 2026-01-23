@@ -10,6 +10,7 @@ import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native
 import MindMentorLogo from '../../assets/MindMentorLogo.svg';
 import { CheckCircle, Monitor, Lightbulb, BriefcaseMedical, ClipboardList, Bot } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Pagination from '../components/Pagination'; // Import Pagination component
 
 const { width } = Dimensions.get('window');
 
@@ -278,16 +279,11 @@ export default function OnboardingScreen() {
         {currentStep === 2 && (
           <Text className="text-center text-white text-xs mb-8">
             By continuing, you agree to the Terms of Service.
+
           </Text>
         )}
-        <View className="flex-row mb-5">
-          {STEPS.map((_, index) => (
-            <View
-              key={index}
-              className={`h-2 rounded-full mx-1 ${index === currentStep ? 'bg-blue-500 w-6' : 'bg-slate-700 w-2'}`}
-            />
-          ))}
-        </View>
+
+        <Pagination data={STEPS} scrollX={scrollX} screenWidth={width} />
 
         <TouchableOpacity
           onPress={handleNext}
@@ -299,6 +295,6 @@ export default function OnboardingScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }

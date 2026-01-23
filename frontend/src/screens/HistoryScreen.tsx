@@ -13,7 +13,7 @@ export default function HistoryScreen() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <ActivityIndicator style={{flex:1}} />;
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
     <View style={styles.container}>
@@ -37,6 +37,8 @@ export default function HistoryScreen() {
     </View>
   );
 }
+
+// TODO: Move styles to nativewind or separete file
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, paddingTop: 50 },

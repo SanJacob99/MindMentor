@@ -11,7 +11,7 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const logout = useAuthStore(state => state.logout);
-  
+
   // Form State
   const [mood, setMood] = useState(5);
   const [stress, setStress] = useState(5);
@@ -70,11 +70,11 @@ export default function HomeScreen() {
       <Text>{label}: {value}</Text>
       <View style={styles.buttonRow}>
         {[1, 3, 5, 7, 9].map(v => (
-          <TouchableOpacity 
-            key={v} 
-            style={[styles.valueBtn, value === v && styles.valueBtnSelected]} 
+          <TouchableOpacity
+            key={v}
+            style={[styles.valueBtn, value === v && styles.valueBtnSelected]}
             onPress={() => setValue(v)}>
-            <Text style={[styles.btnText, value === v && {color: '#fff'}]}>{v}</Text>
+            <Text style={[styles.btnText, value === v && { color: '#fff' }]}>{v}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -92,22 +92,22 @@ export default function HomeScreen() {
         {renderSlider('Mood', mood, setMood)}
         {renderSlider('Stress', stress, setStress)}
         {renderSlider('Energy', energy, setEnergy)}
-        
-        <TextInput 
-          style={styles.textInput} 
-          placeholder="How are you feeling properly?" 
-          value={text} 
-          onChangeText={setText} 
+
+        <TextInput
+          style={styles.textInput}
+          placeholder="How are you feeling properly?"
+          value={text}
+          onChangeText={setText}
           multiline
         />
-        
+
         <Button title={submitting ? "Saving..." : "Check In"} onPress={handleSubmit} disabled={submitting} />
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Today's Guidance</Text>
         {loadingRecs ? <Text>Loading...</Text> : recommendations.length === 0 ? (
-          <Text style={{fontStyle: 'italic'}}>Keep checking in to unlock recommendations.</Text>
+          <Text style={{ fontStyle: 'italic' }}>Keep checking in to unlock recommendations.</Text>
         ) : (
           recommendations.map(rec => (
             <View key={rec.id} style={styles.recCard}>
@@ -131,6 +131,8 @@ export default function HomeScreen() {
     </ScrollView>
   );
 }
+
+// TODO: Move styles to nativewind or separete file
 
 const styles = StyleSheet.create({
   container: { padding: 20, paddingBottom: 50 },
