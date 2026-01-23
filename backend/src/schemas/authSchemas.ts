@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const preferencesSchema = z.object({
   reminderTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format (HH:MM)").optional(),
   timezone: z.string().optional(),
+  checkInEnabled: z.boolean().optional(),
 }).strict();
 
 export const signupSchema = z.object({

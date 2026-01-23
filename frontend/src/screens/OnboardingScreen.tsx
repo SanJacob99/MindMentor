@@ -122,6 +122,7 @@ export default function OnboardingScreen() {
       const preferences = {
         reminderTime: timeString,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+        checkInEnabled: checkInEnabled,
       };
 
       const updatedUser = await api.request('POST', '/users/preferences', preferences);
