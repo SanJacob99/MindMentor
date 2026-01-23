@@ -101,8 +101,8 @@ export default function OnboardingScreen() {
 
       queryClient.setQueryData(['user'], updatedUser);
 
-    } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to save preferences');
+    } catch (error) {
+      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to save preferences');
     } finally {
       setSaving(false);
     }

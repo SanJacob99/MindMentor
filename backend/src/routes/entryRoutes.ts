@@ -3,6 +3,7 @@ import prisma from '../utils/db';
 import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { createEntrySchema, entryQuerySchema } from '../schemas/entrySchemas';
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 
 export default async function entryRoutes(fastify: FastifyInstance) {
   // Global auth hook for these routes could be done here or per-route
@@ -41,7 +42,7 @@ export default async function entryRoutes(fastify: FastifyInstance) {
       const { from, to } = entryQuerySchema.parse(request.query || {});
       const userId = (request as AuthRequest).user!.userId;
 
-      const whereClause: any = { userId };
+      const whereClause: Prisma.JournalEntryWhereInput = { userId };
       if (from || to) {
         whereClause.createdAt = {};
         if (from) whereClause.createdAt.gte = new Date(from);
