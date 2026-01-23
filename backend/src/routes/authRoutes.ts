@@ -5,10 +5,18 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { env } from '../config/env';
+import { RateLimiter } from '../utils/rateLimiter';
+
+const rateLimiter = new RateLimiter();
 
 export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post('/signup', async (request, reply) => {
     try {
+      // Security: Rate limit based on IP. Ensure trustProxy is set if behind a proxy.
+      if (!rateLimiter.check(request.ip, 5, 15 * 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
       const { email, password, preferences } = signupSchema.parse(request.body);
 
       const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -48,6 +56,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   fastify.post('/login', async (request, reply) => {
     try {
+      // Security: Rate limit based on IP. Ensure trustProxy is set if behind a proxy.
+      if (!rateLimiter.check(request.ip, 5, 15 * 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
       const { email, password } = loginSchema.parse(request.body);
 
       const user = await prisma.user.findUnique({ where: { email } });
