@@ -3,7 +3,11 @@ import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { env } from './config/env';
 
-const fastify = Fastify({ logger: true });
+// Trust proxy is required for correct IP rate limiting when behind a load balancer
+const fastify = Fastify({
+  logger: true,
+  trustProxy: true
+});
 const prisma = new PrismaClient();
 
 import authRoutes from './routes/authRoutes';
