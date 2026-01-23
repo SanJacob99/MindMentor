@@ -48,8 +48,8 @@ export default function HomeScreen() {
       setText('');
       // Refresh recs
       fetchRecs();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
+    } catch (error) {
+      Alert.alert('Error', error instanceof Error ? error.message : "An unknown error occurred");
     } finally {
       setSubmitting(false);
     }
@@ -60,8 +60,8 @@ export default function HomeScreen() {
       await api.post(`/recommendations/${id}/feedback`, { outcome });
       Alert.alert('Thanks', 'Feedback recorded.');
       fetchRecs(); // Update UI
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
+    } catch (error) {
+      Alert.alert('Error', error instanceof Error ? error.message : "An unknown error occurred");
     }
   };
 

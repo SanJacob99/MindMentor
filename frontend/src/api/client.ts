@@ -4,13 +4,13 @@ import Constants from 'expo-constants';
 const API_URL = Constants.expoConfig?.extra?.apiUrl;
 
 export const api = {
-  async request(method: string, endpoint: string, body?: any) {
+  async request(method: string, endpoint: string, body?: unknown) {
     if (!API_URL) {
       throw new Error('API_URL is not configured');
     }
    
     const token = await SecureStore.getItemAsync('accessToken');
-    const headers: any = {
+    const headers: HeadersInit & Record<string, string> = {
       'Content-Type': 'application/json',
     };
     if (token) {
@@ -35,5 +35,5 @@ export const api = {
   },
 
   get: (endpoint: string) => api.request('GET', endpoint),
-  post: (endpoint: string, body: any) => api.request('POST', endpoint, body),
+  post: (endpoint: string, body: unknown) => api.request('POST', endpoint, body),
 };

@@ -2,13 +2,16 @@ import { FastifyInstance } from 'fastify';
 import prisma from '../utils/db';
 import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 import { preferencesSchema } from '../schemas/authSchemas';
 
 // Define UserDTO type for consistency (could be shared in a common types file)
+type Preferences = z.infer<typeof preferencesSchema>;
+
 interface UserDTO {
   id: string;
   email: string;
-  preferences: any; //Fix this any
+  preferences: Preferences | Prisma.JsonValue;
   hasCompletedOnboarding: boolean;
 }
 
@@ -41,8 +44,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
       const userId = (request as AuthRequest).user!.userId;
       
       const existingUser = await prisma.user.findUnique({ where: { id: userId }, select: { preferences: true } });
-      console.log(existingUser);
-      const currentPrefs = (existingUser?.preferences as object) || {}; //as object?
+      const currentPrefs = (existingUser?.preferences as Prisma.JsonObject) || {};
       const newPrefs = { ...currentPrefs, ...(preferences as object) };
       
       // Implicitly mark onboarding as completed if this endpoint is called.
@@ -53,7 +55,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
       const user = await prisma.user.update({
         where: { id: userId },
         data: { 
-          preferences: newPrefs as any, //Another any
+          preferences: newPrefs as Prisma.InputJsonValue,
           hasCompletedOnboarding: true
         },
       });

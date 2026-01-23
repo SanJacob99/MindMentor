@@ -128,8 +128,8 @@ export default function OnboardingScreen() {
       const updatedUser = await api.request('POST', '/users/preferences', preferences);
       queryClient.setQueryData(['user'], updatedUser);
 
-    } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to save preferences');
+    } catch (error) {
+      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to save preferences');
     } finally {
       setSaving(false);
     }
