@@ -7,12 +7,12 @@ export const preferencesSchema = z.object({
 }).strict();
 
 export const signupSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().email().max(255, "Email is too long"),
+  password: z.string().min(6).max(128, "Password is too long"),
   preferences: preferencesSchema.optional(),
 });
 
 export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
+  email: z.string().email().max(255, "Email is too long"),
+  password: z.string().max(128, "Password is too long"),
 });

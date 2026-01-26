@@ -7,3 +7,8 @@
 **Vulnerability:** The `app.ts` file immediately started the server on import, making it impossible to write unit/integration tests using `app.inject()` without port conflicts or architectural hacks.
 **Learning:** Hard-coupling server startup (`listen`) with configuration prevents effective security testing.
 **Prevention:** Always use a factory pattern (e.g., `buildApp()`) to return the app instance, separating configuration from execution.
+
+## 2026-02-04 - Unbounded Input Vectors
+**Vulnerability:** Zod schemas for user input (e.g., journal entries, signup) lacked `.max()` constraints on strings and arrays, allowing attackers to send massive payloads (DoS).
+**Learning:** Zod `z.string()` defaults to unlimited length. Without explicit constraints, the application is vulnerable to memory exhaustion.
+**Prevention:** Enforce `.max()` limits on ALL string and array inputs in Zod schemas.
