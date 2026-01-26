@@ -4,8 +4,8 @@ export const createEntrySchema = z.object({
   mood: z.number().min(0).max(10),
   stress: z.number().min(0).max(10),
   energy: z.number().min(0).max(10),
-  text: z.string().optional(),
-  tags: z.array(z.string()).default([]),
+  text: z.string().max(20000).optional(),
+  tags: z.array(z.string().max(50)).max(10).default([]),
 });
 
 export const entryQuerySchema = z.object({
