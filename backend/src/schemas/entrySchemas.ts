@@ -9,6 +9,6 @@ export const createEntrySchema = z.object({
 });
 
 export const entryQuerySchema = z.object({
-  from: z.string().optional(), // ISO date string
-  to: z.string().optional(),   // ISO date string
+  from: z.string().datetime().optional(), // ISO date string
+  to: z.string().datetime().optional(),   // ISO date string
 });

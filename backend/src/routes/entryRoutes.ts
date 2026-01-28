@@ -57,6 +57,9 @@ export default async function entryRoutes(fastify: FastifyInstance) {
 
       return reply.send(entries);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return reply.status(400).send({ error: (error as any).errors });
+      }
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Internal Server Error' });
     }
