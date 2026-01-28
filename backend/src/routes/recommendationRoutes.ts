@@ -72,7 +72,7 @@ export default async function recommendationRoutes(fastify: FastifyInstance) {
 
   fastify.post('/:id/feedback', async (request, reply) => {
     try {
-      const { id } = z.object({ id: z.string() }).parse(request.params);
+      const { id } = z.object({ id: z.string().uuid() }).parse(request.params);
       const { outcome } = z.object({ outcome: z.enum(['HELPED', 'NOT_HELPED']) }).parse(request.body);
       const userId = (request as AuthRequest).user!.userId;
 
