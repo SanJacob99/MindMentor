@@ -44,7 +44,10 @@ export default function SignInScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', padding: 24}}>
+        <ScrollView
+          contentContainerStyle={{flexGrow: 1, justifyContent: 'center', padding: 24}}
+          keyboardShouldPersistTaps="handled"
+        >
           <View className="items-center mb-8">
             <MindMentorLogo width={80} height={80} />
             <Text className="text-white text-3xl font-bold mt-4">MindMentor</Text>
