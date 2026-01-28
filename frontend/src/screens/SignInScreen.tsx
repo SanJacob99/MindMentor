@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../api/client';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
+import MindMentorLogo from '../../assets/MindMentorLogo.svg';
+import { Mail, Lock } from 'lucide-react-native';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
 
@@ -14,6 +17,10 @@ export default function SignInScreen() {
   const [loading, setLoading] = useState(false);
   const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigation<SignInScreenNavigationProp>();
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -32,32 +39,72 @@ export default function SignInScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>MindMentor Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title={loading ? "Logging in..." : "Login"} onPress={handleLogin} disabled={loading} />
-      <Button title="Don't have an account? Sign Up" onPress={() => navigation.navigate('SignUp')} />
-    </View>
+    <SafeAreaView className="flex-1 bg-slate-900">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+      >
+        <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', padding: 24}}>
+          <View className="items-center mb-8">
+            <MindMentorLogo width={80} height={80} />
+            <Text className="text-white text-3xl font-bold mt-4">MindMentor</Text>
+            <Text className="text-white text-2xl font-semibold mt-2">Welcome back</Text>
+            <Text className="text-slate-400 text-center mt-2">
+              Sign in to continue your journey towards clarity and calm.
+            </Text>
+          </View>
+
+          <View>
+            <Text className="text-slate-300 font-bold mb-2">Email Address</Text>
+            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-4">
+              <Mail color="#94a3b8" size={20} />
+              <TextInput
+                className="flex-1 text-white ml-3"
+                placeholder="you@example.com"
+                placeholderTextColor="#94a3b8"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+              />
+            </View>
+
+            <Text className="text-slate-300 font-bold mb-2">Password</Text>
+            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-2">
+              <Lock color="#94a3b8" size={20} />
+              <TextInput
+                className="flex-1 text-white ml-3"
+                placeholder="••••••••"
+                placeholderTextColor="#94a3b8"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
+            </View>
+
+            <TouchableOpacity className="self-end mb-6" onPress={() => Alert.alert('Forgot Password', 'Not implemented')}>
+              <Text className="text-blue-500 font-semibold">Forgot Password?</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className={`bg-blue-500 rounded-lg py-4 items-center mb-6 ${loading ? 'opacity-70' : ''}`}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              <Text className="text-white font-bold text-lg">
+                {loading ? "Logging in..." : "Sign In"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="flex-row justify-center"
+              onPress={() => navigation.navigate('SignUp')}
+            >
+              <Text className="text-slate-400">Don't have an account? </Text>
+              <Text className="text-blue-500 font-bold">Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
-
-// TODO: Move styles to nativewind or separete file
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20 },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10, borderRadius: 5 },
-});
