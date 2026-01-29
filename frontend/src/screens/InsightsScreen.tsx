@@ -85,7 +85,7 @@ export default function InsightsScreen() {
   const analysisText = `Your energy levels remained steady this week, peaking on Wednesday. While stress showed a slight increase towards the weekend, your overall mood trended upwards, reaching its highest point today.`;
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#020617', height: Platform.OS === 'web' ? '100vh' : '100%' }}>
+    <View style={{ flex: 1, backgroundColor: '#020617', height: '100%' }}>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
         style={{ flex: 1 }}
