@@ -17,6 +17,7 @@ type PaginationProps = {
 const Pagination = ({ data, scrollX, screenWidth }: PaginationProps) => {
     return (
         <View className="flex-row mb-5 justify-center items-center">
+            {/* This might have problem in dynamic number of pages */}
             {data.map((_, index) => {
                 const animatedStyle = useAnimatedStyle(() => {
                     const inputRange = [
