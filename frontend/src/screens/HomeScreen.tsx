@@ -76,7 +76,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Header */}
         {/* Header */}
-        <Header />
+        <Header title="Home" />
 
         <Text className="text-slate-400 text-center mb-6">Starting to learn your patterns</Text>
 
