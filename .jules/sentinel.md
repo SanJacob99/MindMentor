@@ -12,3 +12,8 @@
 **Vulnerability:** Zod schemas for user input (e.g., journal entries, signup) lacked `.max()` constraints on strings and arrays, allowing attackers to send massive payloads (DoS).
 **Learning:** Zod `z.string()` defaults to unlimited length. Without explicit constraints, the application is vulnerable to memory exhaustion.
 **Prevention:** Enforce `.max()` limits on ALL string and array inputs in Zod schemas.
+
+## 2026-02-14 - Timing Attack on Auth Endpoints
+**Vulnerability:** The `/login` endpoint returned immediately when a user was not found, while performing an expensive `scrypt` hash verification when the user existed. This timing difference (~100ms) allowed attackers to enumerate valid email addresses.
+**Learning:** `scrypt` and other secure hashing algorithms are CPU-intensive by design. Code paths that skip this work reveal state.
+**Prevention:** Implement "constant-time" logic by performing a dummy hash verification when the user is not found, ensuring both success and failure paths perform comparable work.
