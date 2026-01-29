@@ -10,6 +10,9 @@ import { RateLimiter } from '../utils/rateLimiter';
 const rateLimiter = new RateLimiter();
 
 export default async function authRoutes(fastify: FastifyInstance) {
+  // Generate a dummy hash for timing attack protection
+  const dummyHash = await hashPassword('dummy-password-for-timing-protection');
+
   fastify.post('/signup', async (request, reply) => {
     try {
       // Security: Rate limit based on IP. Ensure trustProxy is set if behind a proxy.
@@ -65,6 +68,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
       const user = await prisma.user.findUnique({ where: { email } });
       if (!user) {
+        // Prevent timing attacks by verifying against a dummy hash
+        await verifyPassword(password, dummyHash);
         return reply.status(401).send({ error: 'Invalid credentials' });
       }
 
