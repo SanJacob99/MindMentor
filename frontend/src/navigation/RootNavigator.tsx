@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ActivityIndicator, View } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 import { useUser } from '../hooks/useUser';
@@ -32,6 +33,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
 function TabNavigator() {
+  const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -40,8 +42,8 @@ function TabNavigator() {
           backgroundColor: '#0f172a', // slate-900 / dark
           borderTopColor: '#1e293b',
           borderTopWidth: 1,
-          height: 60,
-          paddingBottom: 8,
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom + 8,
           paddingTop: 8,
         },
         tabBarActiveTintColor: '#3b82f6', // blue-500
@@ -100,8 +102,8 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator 
-        id={undefined} 
+      <Stack.Navigator
+        id={undefined}
         initialRouteName={token ? (user?.hasCompletedOnboarding ? 'Main' : 'Onboarding') : 'SignIn'}
         detachInactiveScreens={false}
         screenOptions={{ headerShown: false }}
@@ -110,10 +112,10 @@ export default function RootNavigator() {
           // Authenticated Stack
           !user?.hasCompletedOnboarding ? (
             // Onboarding Interstitial
-             <Stack.Screen 
-               name="Onboarding" 
-               component={OnboardingScreen} 
-             />
+            <Stack.Screen
+              name="Onboarding"
+              component={OnboardingScreen}
+            />
           ) : (
             // Main App Stack (Tabs)
             <Stack.Screen name="Main" component={TabNavigator} />

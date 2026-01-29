@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
 import { api } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
+
+import CustomSlider from '../components/CustomSlider';
+import Header from '../components/Header';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -65,187 +69,142 @@ export default function HomeScreen() {
     }
   };
 
-  const getLabel = (value: number, type: 'mood' | 'stress' | 'energy') => {
-      if (type === 'mood') return value > 7 ? 'Good' : value > 4 ? 'Okay' : 'Low';
-      if (type === 'stress') return value > 7 ? 'High' : value > 4 ? 'Moderate' : 'Low';
-      if (type === 'energy') return value > 7 ? 'High' : value > 4 ? 'Moderate' : 'Low';
-      return '';
-  };
 
-  const getColor = (type: 'mood' | 'stress' | 'energy') => {
-      if (type === 'mood') return '#3b82f6'; // blue-500
-      if (type === 'stress') return '#f97316'; // orange-500
-      if (type === 'energy') return '#2dd4bf'; // teal-400
-      return '#fff';
-  };
-
-  const CustomSlider = ({ label, value, setValue, icon: Icon, type }: { label: string, value: number, setValue: (v: number) => void, icon: any, type: 'mood' | 'stress' | 'energy' }) => (
-    <View className="mb-6">
-      <View className="flex-row justify-between items-center mb-2">
-        <View className="flex-row items-center gap-2">
-            <Icon size={20} color={getColor(type)} />
-            <Text className="text-slate-200 text-base font-medium">{label}</Text>
-        </View>
-        <Text className="text-slate-400 font-medium bg-slate-800 px-2 py-1 rounded text-xs">{getLabel(value, type)}</Text>
-      </View>
-      <Slider
-        style={{ width: '100%', height: 40 }}
-        minimumValue={1}
-        maximumValue={10}
-        step={1}
-        value={value}
-        onValueChange={setValue}
-        minimumTrackTintColor={getColor(type)}
-        maximumTrackTintColor="#334155"
-        thumbTintColor="#fff"
-      />
-    </View>
-  );
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-950">
+    <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Header */}
-        <View className="flex-row justify-between items-center px-5 pt-4 pb-6">
-          <TouchableOpacity>
-             <Menu color="#fff" size={24} />
-          </TouchableOpacity>
-          <View className="items-center">
-            <Text className="text-white text-2xl font-bold">Today</Text>
-            <Text className="text-blue-500 font-medium">Today, Oct 24</Text>
-          </View>
-          <TouchableOpacity onPress={logout} className="bg-blue-900 w-10 h-10 rounded-full justify-center items-center">
-             <Text className="text-blue-300 font-bold">JD</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Header */}
+        <Header title="Home" />
 
         <Text className="text-slate-400 text-center mb-6">Starting to learn your patterns</Text>
 
         {/* Recommendations / Placeholder */}
         <View className="mx-5 mb-8 border border-dashed border-slate-700 bg-slate-900/40 p-6 rounded-2xl items-center">
-           <View className="bg-slate-800 p-3 rounded-full mb-4">
-              <Brain size={24} color="#3b82f6" />
-           </View>
-           <Text className="text-white text-lg font-bold mb-2">Personalized Recommendations</Text>
-           <Text className="text-slate-400 text-center leading-5">
-             After a few check-ins, this space will show options based on what's helped you before.
-           </Text>
+          <View className="bg-slate-800 p-3 rounded-full mb-4">
+            <Brain size={24} color="#3b82f6" />
+          </View>
+          <Text className="text-white text-lg font-bold mb-2">Personalized Recommendations</Text>
+          <Text className="text-slate-400 text-center leading-5">
+            After a few check-ins, this space will show options based on what's helped you before.
+          </Text>
         </View>
 
         {/* Check-in Section */}
         <View className="px-5">
-            <Text className="text-white text-xl font-bold mb-4">Log how things feel right now</Text>
+          <Text className="text-white text-xl font-bold mb-4">Log how things feel right now</Text>
 
-            <View className="bg-slate-900 rounded-2xl p-5 border border-slate-800">
-                <CustomSlider label="Mood" value={mood} setValue={setMood} icon={Smile} type="mood" />
-                <CustomSlider label="Stress" value={stress} setValue={setStress} icon={Coffee} type="stress" />
-                <CustomSlider label="Energy" value={energy} setValue={setEnergy} icon={Zap} type="energy" />
+          <View className="bg-slate-900 rounded-2xl p-5 border border-slate-800">
+            <CustomSlider label="Mood" value={mood} setValue={setMood} icon={Smile} type="mood" />
+            <CustomSlider label="Stress" value={stress} setValue={setStress} icon={Coffee} type="stress" />
+            <CustomSlider label="Energy" value={energy} setValue={setEnergy} icon={Zap} type="energy" />
 
-                <Text className="text-slate-200 mb-2 mt-2">Optional context</Text>
-                <Text className="text-slate-500 text-xs mb-3">Only tap what feels relevant</Text>
+            <Text className="text-slate-200 mb-2 mt-2">Optional context</Text>
+            <Text className="text-slate-500 text-xs mb-3">Only tap what feels relevant</Text>
 
-                <View className="flex-row flex-wrap gap-2 mb-6">
-                    {contextOptions.map(opt => (
-                        <TouchableOpacity
-                            key={opt}
-                            onPress={() => toggleTag(opt)}
-                            className={`px-4 py-2 rounded-full border ${tags.includes(opt) ? 'bg-slate-700 border-slate-600' : 'bg-slate-900 border-slate-700'}`}
-                        >
-                            <Text className={`text-sm ${tags.includes(opt) ? 'text-white' : 'text-slate-400'}`}>{opt}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-
-                <View className="bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border border-slate-800">
-                    <TextInput
-                        className="flex-1 text-white text-base"
-                        placeholder="Add optional note..."
-                        placeholderTextColor="#64748b"
-                        value={text}
-                        onChangeText={setText}
-                        multiline
-                    />
-                    <SlidersHorizontal size={18} color="#64748b" />
-                </View>
-
+            <View className="flex-row flex-wrap gap-2 mb-6">
+              {contextOptions.map(opt => (
                 <TouchableOpacity
-                    onPress={handleSubmit}
-                    disabled={submitting}
-                    className="mt-4 bg-blue-600 py-3 rounded-xl items-center"
+                  key={opt}
+                  onPress={() => toggleTag(opt)}
+                  className={`px-4 py-2 rounded-full border ${tags.includes(opt) ? 'bg-slate-700 border-slate-600' : 'bg-slate-900 border-slate-700'}`}
                 >
-                    <Text className="text-white font-bold">{submitting ? "Saving..." : "Save Check-in"}</Text>
+                  <Text className={`text-sm ${tags.includes(opt) ? 'text-white' : 'text-slate-400'}`}>{opt}</Text>
                 </TouchableOpacity>
+              ))}
             </View>
+
+            <View className="bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border border-slate-800">
+              <TextInput
+                className="flex-1 text-white text-base"
+                placeholder="Add optional note..."
+                placeholderTextColor="#64748b"
+                value={text}
+                onChangeText={setText}
+                multiline
+              />
+              <SlidersHorizontal size={18} color="#64748b" />
+            </View>
+
+            <TouchableOpacity
+              onPress={handleSubmit}
+              disabled={submitting}
+              className="mt-4 bg-blue-600 py-3 rounded-xl items-center"
+            >
+              <Text className="text-white font-bold">{submitting ? "Saving..." : "Save Check-in"}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Patterns Section */}
         <View className="px-5 mt-8">
-            <View className="flex-row justify-between items-center mb-4">
-                <Text className="text-white text-xl font-bold">Patterns so far</Text>
-                <TouchableOpacity>
-                    <Text className="text-blue-500 font-medium">View all</Text>
-                </TouchableOpacity>
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-white text-xl font-bold">Patterns so far</Text>
+            <TouchableOpacity>
+              <Text className="text-blue-500 font-medium">View all</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View className="bg-slate-900 rounded-2xl p-5 border border-slate-800">
+            <View className="flex-row gap-4 mb-6">
+              <View className="bg-emerald-900/50 px-3 py-1 rounded items-center justify-center border border-emerald-800">
+                <View className="flex-row items-center gap-1">
+                  <TrendingUp size={14} color="#10b981" />
+                  <Text className="text-emerald-400 font-bold">+5%</Text>
+                </View>
+              </View>
+              <View className="flex-1">
+                <Text className="text-slate-300 leading-5">
+                  Your mood has been steadily improving over the last 3 days. Morning check-ins correlate with higher daily averages.
+                </Text>
+              </View>
             </View>
 
-            <View className="bg-slate-900 rounded-2xl p-5 border border-slate-800">
-                <View className="flex-row gap-4 mb-6">
-                    <View className="bg-emerald-900/50 px-3 py-1 rounded items-center justify-center border border-emerald-800">
-                        <View className="flex-row items-center gap-1">
-                             <TrendingUp size={14} color="#10b981" />
-                             <Text className="text-emerald-400 font-bold">+5%</Text>
-                        </View>
-                    </View>
-                    <View className="flex-1">
-                        <Text className="text-slate-300 leading-5">
-                            Your mood has been steadily improving over the last 3 days. Morning check-ins correlate with higher daily averages.
-                        </Text>
-                    </View>
-                </View>
+            {/* Chart Visualization */}
+            <View className="h-40 w-full relative">
+              {/* Grid lines */}
+              <View className="absolute inset-0 justify-between py-2">
+                <View className="h-[1px] bg-slate-800 w-full" />
+                <View className="h-[1px] bg-slate-800 w-full" />
+                <View className="h-[1px] bg-slate-800 w-full" />
+                <View className="h-[1px] bg-slate-800 w-full" />
+              </View>
 
-                {/* Chart Visualization */}
-                <View className="h-40 w-full relative">
-                    {/* Grid lines */}
-                    <View className="absolute inset-0 justify-between py-2">
-                        <View className="h-[1px] bg-slate-800 w-full" />
-                        <View className="h-[1px] bg-slate-800 w-full" />
-                        <View className="h-[1px] bg-slate-800 w-full" />
-                        <View className="h-[1px] bg-slate-800 w-full" />
-                    </View>
-
-                    <Svg height="100%" width="100%" viewBox="0 0 300 100" style={{ marginTop: 10 }}>
-                         <Defs>
-                            <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                                <Stop offset="0" stopColor="#3b82f6" stopOpacity="0.5" />
-                                <Stop offset="1" stopColor="#3b82f6" stopOpacity="0" />
-                            </LinearGradient>
-                         </Defs>
-                         {/* Mock Data Line */}
-                         <Path
-                            d="M0 90 L50 85 L100 95 L150 70 L200 65 L250 50 L300 45"
-                            fill="none"
-                            stroke="#3b82f6"
-                            strokeWidth="3"
-                         />
-                         {/* Dots */}
-                         <Circle cx="0" cy="90" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
-                         <Circle cx="50" cy="85" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
-                         <Circle cx="100" cy="95" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
-                         <Circle cx="150" cy="70" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
-                         <Circle cx="200" cy="65" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
-                         <Circle cx="250" cy="50" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
-                         <Circle cx="300" cy="45" r="4" fill="#fff" stroke="#3b82f6" strokeWidth="2" />
-                    </Svg>
-                </View>
-                <View className="flex-row justify-between mt-2 px-1">
-                    <Text className="text-slate-600 text-[10px] font-bold">MON</Text>
-                    <Text className="text-slate-600 text-[10px] font-bold">TUE</Text>
-                    <Text className="text-slate-600 text-[10px] font-bold">WED</Text>
-                    <Text className="text-slate-600 text-[10px] font-bold">THU</Text>
-                    <Text className="text-slate-600 text-[10px] font-bold">FRI</Text>
-                    <Text className="text-slate-600 text-[10px] font-bold">SAT</Text>
-                    <Text className="text-slate-600 text-[10px] font-bold">TODAY</Text>
-                </View>
+              <Svg height="100%" width="100%" viewBox="0 0 300 100" style={{ marginTop: 10 }}>
+                <Defs>
+                  <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+                    <Stop offset="0" stopColor="#3b82f6" stopOpacity="0.5" />
+                    <Stop offset="1" stopColor="#3b82f6" stopOpacity="0" />
+                  </LinearGradient>
+                </Defs>
+                {/* Mock Data Line */}
+                <Path
+                  d="M0 90 L50 85 L100 95 L150 70 L200 65 L250 50 L300 45"
+                  fill="none"
+                  stroke="#3b82f6"
+                  strokeWidth="3"
+                />
+                {/* Dots */}
+                <Circle cx="0" cy="90" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
+                <Circle cx="50" cy="85" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
+                <Circle cx="100" cy="95" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
+                <Circle cx="150" cy="70" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
+                <Circle cx="200" cy="65" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
+                <Circle cx="250" cy="50" r="3" fill="#0f172a" stroke="#3b82f6" strokeWidth="2" />
+                <Circle cx="300" cy="45" r="4" fill="#fff" stroke="#3b82f6" strokeWidth="2" />
+              </Svg>
             </View>
+            <View className="flex-row justify-between mt-2 px-1">
+              <Text className="text-slate-600 text-[10px] font-bold">MON</Text>
+              <Text className="text-slate-600 text-[10px] font-bold">TUE</Text>
+              <Text className="text-slate-600 text-[10px] font-bold">WED</Text>
+              <Text className="text-slate-600 text-[10px] font-bold">THU</Text>
+              <Text className="text-slate-600 text-[10px] font-bold">FRI</Text>
+              <Text className="text-slate-600 text-[10px] font-bold">SAT</Text>
+              <Text className="text-slate-600 text-[10px] font-bold">TODAY</Text>
+            </View>
+          </View>
         </View>
 
       </ScrollView>
