@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import entryRoutes from './routes/entryRoutes';
@@ -10,6 +11,10 @@ export function buildApp() {
   const fastify = Fastify({
     logger: true,
     trustProxy: true
+  });
+
+  fastify.register(cors, {
+    origin: true
   });
 
   // Security Headers

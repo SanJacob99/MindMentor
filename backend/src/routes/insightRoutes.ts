@@ -23,12 +23,19 @@ export default async function insightRoutes(fastify: FastifyInstance) {
 
       // Simple aggregation
       const labels = entries.map((e: JournalEntry) => e.createdAt.toISOString().split('T')[0]);
-      const data = entries.map((e: JournalEntry) => e.mood);
+      const mood = entries.map((e: JournalEntry) => e.mood);
+      const stress = entries.map((e: JournalEntry) => e.stress);
+      const energy = entries.map((e: JournalEntry) => e.energy);
 
       return reply.send({
         range: '7d',
         labels,
-        data,
+        data: mood, // Keep for backward compatibility or simple access
+        dataset: {
+          mood,
+          stress,
+          energy
+        },
         count: entries.length,
         averageMood: entries.length > 0 
           ? entries.reduce((a: number, b: JournalEntry) => a + b.mood, 0) / entries.length 
