@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { Entry } from '../types/entry';
+import { useUser } from './useUser';
 
 export interface NewEntry {
   mood: number;
@@ -11,16 +12,14 @@ export interface NewEntry {
 }
 
 export const useEntries = () => {
+  const { data: user } = useUser();
   return useQuery({
-    queryKey: ['entries'],
+    queryKey: ['entries', user?.id],
     queryFn: async () => {
       const data = await api.get('/entries');
-      // The API might return { entries: [...] } or just [...]
-      // Looking at HistoryScreen.tsx: "data = await api.get('/entries'); ... data || []"
-      // It seems it expects an array directly.
-      // But let's check HistoryScreen.tsx again.
       return data as Entry[];
     },
+    enabled: !!user?.id,
   });
 };
 
@@ -32,6 +31,7 @@ export const useAddEntry = () => {
       return api.post('/entries', newEntry);
     },
     onSuccess: () => {
+      // Invalidate queries starting with these keys
       queryClient.invalidateQueries({ queryKey: ['entries'] });
       queryClient.invalidateQueries({ queryKey: ['insights'] });
       queryClient.invalidateQueries({ queryKey: ['recommendations'] });
