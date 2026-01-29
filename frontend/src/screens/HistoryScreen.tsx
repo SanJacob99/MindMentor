@@ -6,6 +6,7 @@ import { api } from '../api/client';
 import HistoryCard from '../components/HistoryCard';
 import EntryDetailModal from '../components/EntryDetailModal';
 import { Entry } from '../types/entry';
+import Header from '../components/Header';
 
 export default function HistoryScreen() {
   const [sections, setSections] = useState<{ title: string; data: Entry[] }[]>([]);
@@ -89,24 +90,9 @@ export default function HistoryScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-900" edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: '#0f172a' }}>
+    <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: '#020617' }}>
       {/* Header */}
-      <View className="flex-row justify-between items-center px-6 py-4">
-        <TouchableOpacity className="p-2">
-           <Menu size={24} color="#fff" />
-        </TouchableOpacity>
-
-        <View className="items-center">
-          <Text className="text-white text-xl font-bold">Today</Text>
-          <Text className="text-blue-500 text-sm font-medium">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long' })}, {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </Text>
-        </View>
-
-        <View className="w-10 h-10 bg-blue-900 rounded-full justify-center items-center border border-blue-700">
-           <Text className="text-blue-300 font-bold">JD</Text>
-        </View>
-      </View>
+      <Header title="History" showDate={true} />
 
       <View className="px-6 pb-2">
         <Text className="text-slate-400 text-center">Your journey so far</Text>

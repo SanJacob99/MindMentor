@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
@@ -8,6 +9,7 @@ import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
 
 import CustomSlider from '../components/CustomSlider';
+import Header from '../components/Header';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -70,21 +72,11 @@ export default function HomeScreen() {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-950">
+    <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Header */}
-        <View className="flex-row justify-between items-center px-5 pt-4 pb-6">
-          <TouchableOpacity>
-            <Menu color="#fff" size={24} />
-          </TouchableOpacity>
-          <View className="items-center">
-            <Text className="text-white text-2xl font-bold">Today</Text>
-            <Text className="text-blue-500 font-medium">Today, Oct 24</Text>
-          </View>
-          <TouchableOpacity onPress={logout} className="bg-blue-900 w-10 h-10 rounded-full justify-center items-center">
-            <Text className="text-blue-300 font-bold">JD</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Header */}
+        <Header />
 
         <Text className="text-slate-400 text-center mb-6">Starting to learn your patterns</Text>
 

@@ -30,35 +30,35 @@ export default function HistoryCard({ entry, onPress }: HistoryCardProps) {
         {entry.text || 'No description'}
       </Text>
 
-      <View className="flex-row space-x-4">
-        <View className="flex-1">
-          <View className="h-1.5 bg-slate-700 rounded-full mb-1 overflow-hidden">
+      <View className="flex-row gap-3">
+        <View className="w-16">
+          <View className="h-1 bg-slate-700 rounded-full mb-1 overflow-hidden">
             <View
               style={{ width: getWidth(entry.mood) }}
               className="h-full bg-blue-500 rounded-full"
             />
           </View>
-          <Text className="text-slate-500 text-xs">Mood</Text>
+          <Text className="text-slate-500 text-[10px]">Mood</Text>
         </View>
 
-        <View className="flex-1">
-          <View className="h-1.5 bg-slate-700 rounded-full mb-1 overflow-hidden">
+        <View className="w-16">
+          <View className="h-1 bg-slate-700 rounded-full mb-1 overflow-hidden">
             <View
               style={{ width: getWidth(entry.stress) }}
               className="h-full bg-orange-500 rounded-full"
             />
           </View>
-          <Text className="text-slate-500 text-xs">Stress</Text>
+          <Text className="text-slate-500 text-[10px]">Stress</Text>
         </View>
 
-        <View className="flex-1">
-          <View className="h-1.5 bg-slate-700 rounded-full mb-1 overflow-hidden">
+        <View className="w-16">
+          <View className="h-1 bg-slate-700 rounded-full mb-1 overflow-hidden">
             <View
               style={{ width: getWidth(entry.energy) }}
               className="h-full bg-teal-500 rounded-full"
             />
           </View>
-          <Text className="text-slate-500 text-xs">Energy</Text>
+          <Text className="text-slate-500 text-[10px]">Energy</Text>
         </View>
       </View>
     </TouchableOpacity>
