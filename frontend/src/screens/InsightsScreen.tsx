@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Dimensions, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { api } from '../api/client';
+import { useInsightsSummary } from '../hooks/useInsights';
 import { Menu, Sparkles } from 'lucide-react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 import Header from '../components/Header';
@@ -11,20 +11,8 @@ type TabType = 'mood' | 'stress' | 'energy';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function InsightsScreen() {
-    const [data, setData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const { data, isLoading: loading } = useInsightsSummary('7d');
     const [activeTab, setActiveTab] = useState<TabType>('mood');
-
-    useEffect(() => {
-        console.log("InsightsScreen mounted, fetching data...");
-        api.get('/insights/summary?range=7d')
-            .then(d => {
-                console.log("Data received", d);
-                setData(d);
-            })
-            .catch(console.error)
-            .finally(() => setLoading(false));
-    }, []);
 
     if (loading) return (
         <View className="flex-1 bg-slate-950 justify-center items-center" style={{ backgroundColor: '#020617', minHeight: '100%' }}>

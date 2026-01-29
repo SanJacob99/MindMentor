@@ -7,6 +7,8 @@ import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRigh
 import { api } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
+import { useAddEntry } from '../hooks/useEntries';
+import { useRecommendations } from '../hooks/useRecommendations';
 
 import CustomSlider from '../components/CustomSlider';
 import Header from '../components/Header';
@@ -21,43 +23,20 @@ export default function HomeScreen() {
   const [energy, setEnergy] = useState(5);
   const [text, setText] = useState('');
   const [tags, setTags] = useState<string[]>([]);
-  const [submitting, setSubmitting] = useState(false);
 
-  // Recs State
-  const [recommendations, setRecommendations] = useState<any[]>([]);
-  const [loadingRecs, setLoadingRecs] = useState(false);
+  const { mutateAsync: addEntry, isPending: submitting } = useAddEntry();
+  const { data: recommendations = [], isLoading: loadingRecs } = useRecommendations();
 
   const contextOptions = ['Sleep', 'Movement', 'Social', 'Workload', 'Outdoors'];
 
-  const fetchRecs = async () => {
-    setLoadingRecs(true);
-    try {
-      const data = await api.get('/recommendations/today');
-      setRecommendations(data.recommendations);
-    } catch (error) {
-      console.log('Failed to fetch recs', error);
-    } finally {
-      setLoadingRecs(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRecs();
-  }, []);
-
   const handleSubmit = async () => {
-    setSubmitting(true);
     try {
-      await api.post('/entries', { mood, stress, energy, text, tags });
+      await addEntry({ mood, stress, energy, text, tags });
       Alert.alert('Success', 'Check-in saved!');
       setText('');
       setTags([]);
-      // Refresh recs
-      fetchRecs();
     } catch (error) {
       Alert.alert('Error', error instanceof Error ? error.message : "An unknown error occurred");
-    } finally {
-      setSubmitting(false);
     }
   };
 
