@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
@@ -7,7 +7,7 @@ import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRigh
 import { api } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
-import { useAddEntry } from '../hooks/useEntries';
+import { useAddEntry, useEntries } from '../hooks/useEntries';
 import { useRecommendations } from '../hooks/useRecommendations';
 
 import CustomSlider from '../components/CustomSlider';
@@ -25,7 +25,21 @@ export default function HomeScreen() {
   const [tags, setTags] = useState<string[]>([]);
 
   const { mutateAsync: addEntry, isPending: submitting } = useAddEntry();
+  const { data: entries } = useEntries();
   const { data: recommendations = [], isLoading: loadingRecs } = useRecommendations();
+
+  const hasSetDefaults = useRef(false);
+
+  useEffect(() => {
+    if (entries && entries.length > 0 && !hasSetDefaults.current) {
+      const sorted = [...entries].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const latest = sorted[0];
+      setMood(latest.mood);
+      setStress(latest.stress);
+      setEnergy(latest.energy);
+      hasSetDefaults.current = true;
+    }
+  }, [entries]);
 
   const contextOptions = ['Sleep', 'Movement', 'Social', 'Workload', 'Outdoors'];
 
@@ -51,7 +65,7 @@ export default function HomeScreen() {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'left', 'right']}>
+    <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'left', 'right']} style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Header */}
         {/* Header */}
