@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../api/client';
@@ -69,6 +69,7 @@ export default function SignUpScreen() {
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
+                accessibilityLabel="Email Address"
               />
             </View>
 
@@ -82,6 +83,7 @@ export default function SignUpScreen() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
+                accessibilityLabel="Password"
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
@@ -100,10 +102,15 @@ export default function SignUpScreen() {
               className={`bg-blue-500 rounded-lg py-4 items-center mb-6 ${loading ? 'opacity-70' : ''}`}
               onPress={handleSignUp}
               disabled={loading}
+              accessibilityRole="button"
+              accessibilityLabel="Sign Up"
+              accessibilityState={{ disabled: loading }}
             >
-              <Text className="text-white font-bold text-lg">
-                {loading ? "Signing up..." : "Sign Up"}
-              </Text>
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text className="text-white font-bold text-lg">Sign Up</Text>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
