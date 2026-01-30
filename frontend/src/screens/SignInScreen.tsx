@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../api/client';
@@ -69,6 +69,7 @@ export default function SignInScreen() {
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
+                accessibilityLabel="Email Address"
               />
             </View>
 
@@ -82,6 +83,7 @@ export default function SignInScreen() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
+                accessibilityLabel="Password"
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
@@ -96,7 +98,12 @@ export default function SignInScreen() {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity className="self-end mb-6" onPress={() => Alert.alert('Forgot Password', 'Not implemented')}>
+            <TouchableOpacity
+              className="self-end mb-6"
+              onPress={() => Alert.alert('Forgot Password', 'Not implemented')}
+              accessibilityRole="button"
+              accessibilityHint="Navigates to password recovery"
+            >
               <Text className="text-blue-500 font-semibold">Forgot Password?</Text>
             </TouchableOpacity>
 
@@ -104,10 +111,15 @@ export default function SignInScreen() {
               className={`bg-blue-500 rounded-lg py-4 items-center mb-6 ${loading ? 'opacity-70' : ''}`}
               onPress={handleLogin}
               disabled={loading}
+              accessibilityRole="button"
+              accessibilityLabel="Sign In"
+              accessibilityState={{ disabled: loading }}
             >
-              <Text className="text-white font-bold text-lg">
-                {loading ? "Logging in..." : "Sign In"}
-              </Text>
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text className="text-white font-bold text-lg">Sign In</Text>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity
