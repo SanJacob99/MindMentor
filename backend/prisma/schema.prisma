@@ -25,9 +25,9 @@ model JournalEntry {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 
-  mood      Int
-  stress    Int
-  energy    Int
+  mood      Float
+  stress    Float
+  energy    Float
   text      String?
   tags      String[]
 
