@@ -83,12 +83,22 @@ function TabNavigator() {
 }
 
 export default function RootNavigator() {
-  const { token, isLoading: isAuthLoading, loadToken } = useAuthStore();
-  const { data: user, isLoading: isUserLoading } = useUser();
+  const { token, isLoading: isAuthLoading, loadToken, logout } = useAuthStore();
+  const { data: user, isLoading: isUserLoading, error: userError } = useUser();
 
   useEffect(() => {
     loadToken();
   }, []);
+
+  useEffect(() => {
+    if (userError) {
+      // If user not found (e.g. deleted from DB but token exists), logout
+      const status = (userError as any).status;
+      if (status === 404 || status === 401) {
+        logout();
+      }
+    }
+  }, [userError, logout]);
 
   if (isAuthLoading || (token && isUserLoading)) {
     return (
@@ -97,8 +107,6 @@ export default function RootNavigator() {
       </View>
     );
   }
-
-  // console.log('user', user);
 
   return (
     <NavigationContainer>
