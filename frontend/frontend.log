@@ -1,46 +1,51 @@
-
-> frontend@1.0.0 web
-> expo start --web
-
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
 Starting project at /app/frontend
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
 [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
 [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
 Starting Metro Bundler
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 56.8% ( 90/179)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 56.8% (221/406)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 56.8% ( 565/2256)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 56.8% (1596/2256)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 84.6% (2241/2477)
-| [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 94.1% (2603/2684)
-Web Bundled 23162ms index.ts (2845 modules)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 59.5% (116/220)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 59.5% ( 219/2080)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 59.5% ( 835/2253)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 75.7% (1960/2253)
+| [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 87.3% (2400/2578)
+Web Bundled 21397ms index.ts (2850 modules)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (2850/2850)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 118ms index.ts (1 module)
+Web Bundled 109ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 189ms index.ts (1 module)
+Web Bundled 96ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 193ms index.ts (1 module)
+Web Bundled 92ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 171ms index.ts (1 module)
+Web Bundled 95ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 163ms index.ts (1 module)
+Web Bundled 95ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 106ms index.ts (1 module)
+Web Bundled 93ms index.ts (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 91ms index.ts (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 92ms index.ts (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 95ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console

@@ -1,43 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, SectionList, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Menu } from 'lucide-react-native';
-import { api } from '../api/client';
+import { useEntries } from '../hooks/useEntries';
 import HistoryCard from '../components/HistoryCard';
 import EntryDetailModal from '../components/EntryDetailModal';
 import { Entry } from '../types/entry';
 import Header from '../components/Header';
 
 export default function HistoryScreen() {
-  const [sections, setSections] = useState<{ title: string; data: Entry[] }[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: entries = [], isLoading: loading } = useEntries();
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-
-  useEffect(() => {
-    fetchEntries();
-  }, []);
-
-  const fetchEntries = async () => {
-    try {
-      let data: Entry[] = [];
-      try {
-        data = await api.get('/entries');
-      } catch (e) {
-        console.warn('API request failed', e);
-        // In a real app, we might show an error state here.
-        // For development/demo purposes, we could fall back to mock data if needed,
-        // but for production correctness, we should handle the error.
-      }
-
-      const grouped = groupEntries(data || []);
-      setSections(grouped);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const groupEntries = (entries: Entry[]) => {
     const groups: { [key: string]: Entry[] } = {
@@ -75,6 +49,8 @@ export default function HistoryScreen() {
 
     return sections;
   };
+
+  const sections = useMemo(() => groupEntries(entries), [entries]);
 
   const handleEntryPress = (entry: Entry) => {
     setSelectedEntry(entry);
