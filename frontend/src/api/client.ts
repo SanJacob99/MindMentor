@@ -2,6 +2,8 @@ import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
+import { useAuthStore } from '../store/authStore';
+
 const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:3000'; // Fallback for local dev
 
 export const api = {
@@ -33,18 +35,17 @@ export const api = {
         });
 
         if (response.status === 401) {
-            if (Platform.OS === 'web') {
-                localStorage.removeItem('accessToken');
-            } else {
-                await SecureStore.deleteItemAsync('accessToken');
-            }
+            useAuthStore.getState().logout();
         }
 
         const data = await response.json();
         if (!response.ok) {
             // For UI verification purposes, if backend is down, we might want to suppress errors or return mock data?
             // But let's throw for now.
-            throw new Error(data.error || JSON.stringify(data) || 'API Request Failed');
+             const error = new Error(data.error || JSON.stringify(data) || 'API Request Failed');
+             //any is used to access the status property of the error object
+             (error as any).status = response.status;
+             throw error;
         }
         return data;
     } catch (e) {
