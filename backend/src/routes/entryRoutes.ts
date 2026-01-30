@@ -4,6 +4,9 @@ import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { createEntrySchema, entryQuerySchema } from '../schemas/entrySchemas';
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
+import { RateLimiter } from '../utils/rateLimiter';
+
+const rateLimiter = new RateLimiter();
 
 export default async function entryRoutes(fastify: FastifyInstance) {
   // Global auth hook for these routes could be done here or per-route
@@ -12,8 +15,14 @@ export default async function entryRoutes(fastify: FastifyInstance) {
 
   fastify.post('/', async (request, reply) => {
     try {
-      const { mood, stress, energy, text, tags } = createEntrySchema.parse(request.body);
       const userId = (request as AuthRequest).user!.userId;
+
+      // Security: Rate limit based on User ID to prevent spam/DoS
+      if (!rateLimiter.check(userId, 10, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
+      const { mood, stress, energy, text, tags } = createEntrySchema.parse(request.body);
 
       const entry = await prisma.journalEntry.create({
         data: {
