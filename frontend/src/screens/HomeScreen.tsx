@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Platform, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
@@ -101,6 +101,9 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   key={opt}
                   onPress={() => toggleTag(opt)}
+                  accessibilityRole="checkbox"
+                  accessibilityLabel={`Toggle ${opt} context`}
+                  accessibilityState={{ checked: tags.includes(opt) }}
                   className={`px-4 py-2 rounded-full border ${tags.includes(opt) ? 'bg-slate-700 border-slate-600' : 'bg-slate-900 border-slate-700'}`}
                 >
                   <Text className={`text-sm ${tags.includes(opt) ? 'text-white' : 'text-slate-400'}`}>{opt}</Text>
@@ -116,6 +119,7 @@ export default function HomeScreen() {
                 value={text}
                 onChangeText={setText}
                 multiline
+                accessibilityLabel="Optional note"
               />
               <SlidersHorizontal size={18} color="#64748b" />
             </View>
@@ -123,9 +127,16 @@ export default function HomeScreen() {
             <TouchableOpacity
               onPress={handleSubmit}
               disabled={submitting}
-              className="mt-4 bg-blue-600 py-3 rounded-xl items-center"
+              accessibilityRole="button"
+              accessibilityLabel="Save Check-in"
+              accessibilityState={{ disabled: submitting }}
+              className="mt-4 bg-blue-600 py-3 rounded-xl items-center justify-center h-12"
             >
-              <Text className="text-white font-bold">{submitting ? "Saving..." : "Save Check-in"}</Text>
+              {submitting ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text className="text-white font-bold">Save Check-in</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -134,7 +145,7 @@ export default function HomeScreen() {
         <View className="px-5 mt-8">
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-white text-xl font-bold">Patterns so far</Text>
-            <TouchableOpacity>
+            <TouchableOpacity accessibilityRole="button" accessibilityLabel="View all patterns">
               <Text className="text-blue-500 font-medium">View all</Text>
             </TouchableOpacity>
           </View>
