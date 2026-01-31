@@ -4,6 +4,9 @@ import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
 import { preferencesSchema } from '../schemas/authSchemas';
+import { RateLimiter } from '../utils/rateLimiter';
+
+const rateLimiter = new RateLimiter();
 
 // Define UserDTO type for consistency (could be shared in a common types file)
 type Preferences = z.infer<typeof preferencesSchema>;
@@ -40,8 +43,14 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
   fastify.post('/preferences', async (request, reply) => {
     try {
-      const preferences = preferencesSchema.partial().parse(request.body);
       const userId = (request as AuthRequest).user!.userId;
+
+      // Security: Rate limit based on User ID
+      if (!rateLimiter.check(userId, 10, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
+      const preferences = preferencesSchema.partial().parse(request.body);
       
       const existingUser = await prisma.user.findUnique({ where: { id: userId }, select: { preferences: true } });
       const currentPrefs = (existingUser?.preferences as Prisma.JsonObject) || {};

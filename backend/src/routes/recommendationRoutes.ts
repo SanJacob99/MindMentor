@@ -3,6 +3,9 @@ import prisma from '../utils/db';
 import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { z } from 'zod';
 import { JournalEntry } from '@prisma/client';
+import { RateLimiter } from '../utils/rateLimiter';
+
+const rateLimiter = new RateLimiter();
 
 export default async function recommendationRoutes(fastify: FastifyInstance) {
   fastify.addHook('preHandler', authenticate);
@@ -10,6 +13,11 @@ export default async function recommendationRoutes(fastify: FastifyInstance) {
   fastify.get('/today', async (request, reply) => {
     try {
       const userId = (request as AuthRequest).user!.userId;
+
+      // Security: Rate limit based on User ID
+      if (!rateLimiter.check(userId, 20, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
 
       // check today's recs first
       const today = new Date();
@@ -75,6 +83,11 @@ export default async function recommendationRoutes(fastify: FastifyInstance) {
       const { id } = z.object({ id: z.string().uuid() }).parse(request.params);
       const { outcome } = z.object({ outcome: z.enum(['HELPED', 'NOT_HELPED']) }).parse(request.body);
       const userId = (request as AuthRequest).user!.userId;
+
+      // Security: Rate limit based on User ID
+      if (!rateLimiter.check(userId, 20, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
 
       const rec = await prisma.recommendation.findUnique({ where: { id } });
       if (!rec || rec.userId !== userId) {
