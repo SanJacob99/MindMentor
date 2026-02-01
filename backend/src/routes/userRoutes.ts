@@ -24,6 +24,11 @@ export default async function userRoutes(fastify: FastifyInstance) {
   fastify.get('/me', async (request, reply) => {
     try {
       const userId = (request as AuthRequest).user!.userId;
+
+      if (!rateLimiter.check(userId, 20, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user) return reply.status(404).send({ error: 'User not found' });
       

@@ -2,6 +2,9 @@ import { FastifyInstance } from 'fastify';
 import prisma from '../utils/db';
 import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { JournalEntry } from '@prisma/client';
+import { RateLimiter } from '../utils/rateLimiter';
+
+const rateLimiter = new RateLimiter();
 
 export default async function insightRoutes(fastify: FastifyInstance) {
   fastify.addHook('preHandler', authenticate);
@@ -9,6 +12,10 @@ export default async function insightRoutes(fastify: FastifyInstance) {
   fastify.get('/summary', async (request, reply) => {
     try {
       const userId = (request as AuthRequest).user!.userId;
+
+      if (!rateLimiter.check(userId, 10, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
       
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
