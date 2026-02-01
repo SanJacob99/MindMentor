@@ -51,6 +51,11 @@ export default async function entryRoutes(fastify: FastifyInstance) {
       const { from, to } = entryQuerySchema.parse(request.query || {});
       const userId = (request as AuthRequest).user!.userId;
 
+      // Security: Rate limit based on User ID
+      if (!rateLimiter.check(userId, 20, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
       const whereClause: Prisma.JournalEntryWhereInput = { userId };
       if (from || to) {
         whereClause.createdAt = {};
