@@ -1,5 +1,6 @@
 
 export class RateLimiter {
+  private static readonly MAX_HITS = 10000;
   private hits = new Map<string, { count: number; expiresAt: number }>();
 
   /**
@@ -30,9 +31,19 @@ export class RateLimiter {
     }
 
     // New record
+    // Security: Enforce max size to prevent DoS (Memory exhaustion)
+    if (this.hits.size >= RateLimiter.MAX_HITS) {
+      // Evict oldest entry (FIFO) to maintain fixed memory footprint
+      // This is O(1) and prevents the map from growing unbounded
+      const oldestKey = this.hits.keys().next().value;
+      if (oldestKey) {
+        this.hits.delete(oldestKey);
+      }
+    }
+
     this.hits.set(key, { count: 1, expiresAt: now + windowMs });
 
-    // Occasional cleanup to prevent memory leaks (1% chance on new entries)
+    // Occasional cleanup to remove expired entries (1% chance)
     if (Math.random() < 0.01) {
       this.cleanup(now);
     }

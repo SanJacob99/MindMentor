@@ -17,3 +17,8 @@
 **Vulnerability:** The `/login` endpoint returned immediately when a user was not found, while performing an expensive `scrypt` hash verification when the user existed. This timing difference (~100ms) allowed attackers to enumerate valid email addresses.
 **Learning:** `scrypt` and other secure hashing algorithms are CPU-intensive by design. Code paths that skip this work reveal state.
 **Prevention:** Implement "constant-time" logic by performing a dummy hash verification when the user is not found, ensuring both success and failure paths perform comparable work.
+
+## 2026-10-27 - Unbounded Memory in Custom Rate Limiters
+**Vulnerability:** The in-memory `RateLimiter` class stored all incoming IP/User keys in a `Map` without a maximum size limit. An attacker could exhaust server memory by sending requests from thousands of unique spoofed identifiers.
+**Learning:** Custom in-memory stores for security controls (like rate limiters) are dangerous if they don't have eviction policies or capacity limits.
+**Prevention:** Always enforce a hard `MAX_SIZE` on in-memory caches/maps. Use LRU or FIFO eviction when the limit is reached to preserve availability.
