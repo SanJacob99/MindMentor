@@ -28,11 +28,33 @@ export default async function insightRoutes(fastify: FastifyInstance) {
         orderBy: { createdAt: 'asc' }
       });
 
-      // Simple aggregation
-      const labels = entries.map((e: JournalEntry) => e.createdAt.toISOString().split('T')[0]);
-      const mood = entries.map((e: JournalEntry) => e.mood);
-      const stress = entries.map((e: JournalEntry) => e.stress);
-      const energy = entries.map((e: JournalEntry) => e.energy);
+      // Security: Aggregate by day to prevent DoS via unbounded response size
+      const dailyData = new Map<string, { mood: number[]; stress: number[]; energy: number[] }>();
+
+      entries.forEach((e: JournalEntry) => {
+        const day = e.createdAt.toISOString().split('T')[0];
+        if (!dailyData.has(day)) {
+          dailyData.set(day, { mood: [], stress: [], energy: [] });
+        }
+        const data = dailyData.get(day)!;
+        data.mood.push(e.mood);
+        data.stress.push(e.stress);
+        data.energy.push(e.energy);
+      });
+
+      const labels: string[] = [];
+      const mood: number[] = [];
+      const stress: number[] = [];
+      const energy: number[] = [];
+
+      // Map preserves insertion order, so labels will be sorted
+      dailyData.forEach((values, day) => {
+        labels.push(day);
+        const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length;
+        mood.push(avg(values.mood));
+        stress.push(avg(values.stress));
+        energy.push(avg(values.energy));
+      });
 
       return reply.send({
         range: '7d',
