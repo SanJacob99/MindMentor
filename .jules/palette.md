@@ -5,3 +5,6 @@
 ## 2026-02-03 - Keyboard Navigation in Forms
 **Learning:** Standard `TextInput` components do not automatically advance focus to the next field, causing friction in authentication flows. Explicitly chaining inputs using `ref`, `returnKeyType="next"`, and `onSubmitEditing` creates a native, polished feel.
 **Action:** Always implement `returnKeyType` logic (Next/Go) and manual focus management for sequential form inputs.
+## 2025-02-18 - Accessible Sliders
+**Learning:** Sliders are often accessible by default but lack context for blind users who only hear a number. They need explicit text values (e.g., "Good", "High Stress") to be meaningful.
+**Action:** Always provide `accessibilityValue={{ text: "..." }}` and `accessibilityRole="adjustable"` to Sliders to map the numeric value to a semantic description.

@@ -24,27 +24,34 @@ interface CustomSliderProps {
     type: 'mood' | 'stress' | 'energy';
 }
 
-const CustomSlider = ({ label, value, setValue, icon: Icon, type }: CustomSliderProps) => (
-    <View className="mb-6">
-        <View className="flex-row justify-between items-center mb-2">
-            <View className="flex-row items-center gap-2">
-                <Icon size={20} color={getColor(type)} />
-                <Text className="text-slate-200 text-base font-medium">{label}</Text>
+const CustomSlider = ({ label, value, setValue, icon: Icon, type }: CustomSliderProps) => {
+    const textLabel = getLabel(value, type);
+
+    return (
+        <View className="mb-6">
+            <View className="flex-row justify-between items-center mb-2">
+                <View className="flex-row items-center gap-2">
+                    <Icon size={20} color={getColor(type)} />
+                    <Text className="text-slate-200 text-base font-medium">{label}</Text>
+                </View>
+                <Text className="text-slate-400 font-medium bg-slate-800 px-2 py-1 rounded text-xs">{textLabel}</Text>
             </View>
-            <Text className="text-slate-400 font-medium bg-slate-800 px-2 py-1 rounded text-xs">{getLabel(value, type)}</Text>
+            <Slider
+                style={{ width: '100%', height: 40 }}
+                minimumValue={1}
+                maximumValue={10}
+                step={0.1}
+                value={value}
+                onValueChange={setValue}
+                minimumTrackTintColor={getColor(type)}
+                maximumTrackTintColor="#334155"
+                thumbTintColor="#fff"
+                accessibilityLabel={label}
+                accessibilityRole="adjustable"
+                accessibilityValue={{ min: 1, max: 10, now: value, text: textLabel }}
+            />
         </View>
-        <Slider
-            style={{ width: '100%', height: 40 }}
-            minimumValue={1}
-            maximumValue={10}
-            step={0.1}
-            value={value}
-            onValueChange={setValue}
-            minimumTrackTintColor={getColor(type)}
-            maximumTrackTintColor="#334155"
-            thumbTintColor="#fff"
-        />
-    </View>
-);
+    );
+};
 
 export default CustomSlider;
