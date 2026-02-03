@@ -22,3 +22,8 @@
 **Vulnerability:** The in-memory `RateLimiter` class stored all incoming IP/User keys in a `Map` without a maximum size limit. An attacker could exhaust server memory by sending requests from thousands of unique spoofed identifiers.
 **Learning:** Custom in-memory stores for security controls (like rate limiters) are dangerous if they don't have eviction policies or capacity limits.
 **Prevention:** Always enforce a hard `MAX_SIZE` on in-memory caches/maps. Use LRU or FIFO eviction when the limit is reached to preserve availability.
+
+## 2026-10-27 - Unbounded Output Vector in Insights
+**Vulnerability:** `GET /insights/summary` returned all journal entries for the requested period without aggregation. A user with many entries (e.g., via spamming) could cause a large response payload, leading to client-side DoS (UI freeze) and potential server strain.
+**Learning:** Assuming a low volume of user data (e.g. "one entry per day") without enforcing it in the schema or code can lead to performance/security issues when that assumption is violated.
+**Prevention:** Always aggregate or paginate data sets that can grow indefinitely. Use `GROUP BY` or application-side aggregation to ensure response size is bounded (e.g. max 7 points for a 7-day chart).
