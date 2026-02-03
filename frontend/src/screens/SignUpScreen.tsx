@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/authStore';
@@ -18,6 +18,7 @@ export default function SignUpScreen() {
   const [loading, setLoading] = useState(false);
   const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigation<SignUpScreenNavigationProp>();
+  const passwordRef = useRef<TextInput>(null);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -70,6 +71,9 @@ export default function SignUpScreen() {
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 accessibilityLabel="Email Address"
+                returnKeyType="next"
+                onSubmitEditing={() => passwordRef.current?.focus()}
+                blurOnSubmit={false}
               />
             </View>
 
@@ -77,6 +81,7 @@ export default function SignUpScreen() {
             <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-6">
               <Lock color="#94a3b8" size={20} />
               <TextInput
+                ref={passwordRef}
                 className="flex-1 text-white ml-3"
                 placeholder="••••••••"
                 placeholderTextColor="#94a3b8"
@@ -84,6 +89,8 @@ export default function SignUpScreen() {
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
                 accessibilityLabel="Password"
+                returnKeyType="go"
+                onSubmitEditing={handleSignUp}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
