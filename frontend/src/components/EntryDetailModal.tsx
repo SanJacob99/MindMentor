@@ -42,7 +42,12 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
             <View className="flex-1 px-6">
                 {/* Top Bar with Close */}
                 <View className="flex-row justify-end mb-4">
-                    <TouchableOpacity onPress={onClose} className="p-2 bg-slate-800 rounded-full">
+                    <TouchableOpacity
+                        onPress={onClose}
+                        className="p-2 bg-slate-800 rounded-full"
+                        accessibilityRole="button"
+                        accessibilityLabel="Close details"
+                    >
                         <X size={20} color="#94a3b8" />
                     </TouchableOpacity>
                 </View>
