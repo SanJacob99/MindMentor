@@ -7,6 +7,7 @@ dotenv.config();
 const envSchema = z.object({
   JWT_SECRET: z.string().min(1, "JWT_SECRET cannot be empty"),
   PORT: z.string().optional().default('3000').transform((val) => parseInt(val, 10)),
+  TRUST_PROXY: z.string().optional(),
 });
 
 const _env = envSchema.safeParse(process.env);

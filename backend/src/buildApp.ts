@@ -5,12 +5,16 @@ import userRoutes from './routes/userRoutes';
 import entryRoutes from './routes/entryRoutes';
 import recommendationRoutes from './routes/recommendationRoutes';
 import insightRoutes from './routes/insightRoutes';
+import { env } from './config/env';
 
 export function buildApp() {
-  // Trust proxy is required for correct IP rate limiting when behind a load balancer
+  // Security: Only trust proxy if explicitly configured. Defaults to false (secure).
+  // This prevents IP spoofing attacks against the rate limiter.
+  const trustProxy = env.TRUST_PROXY === 'true' ? true : (env.TRUST_PROXY || false);
+
   const fastify = Fastify({
     logger: true,
-    trustProxy: true
+    trustProxy
   });
 
   fastify.register(cors, {

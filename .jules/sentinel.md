@@ -27,3 +27,8 @@
 **Vulnerability:** `GET /insights/summary` returned all journal entries for the requested period without aggregation. A user with many entries (e.g., via spamming) could cause a large response payload, leading to client-side DoS (UI freeze) and potential server strain.
 **Learning:** Assuming a low volume of user data (e.g. "one entry per day") without enforcing it in the schema or code can lead to performance/security issues when that assumption is violated.
 **Prevention:** Always aggregate or paginate data sets that can grow indefinitely. Use `GROUP BY` or application-side aggregation to ensure response size is bounded (e.g. max 7 points for a 7-day chart).
+
+## 2026-10-28 - IP Spoofing via Trust Proxy configuration
+**Vulnerability:** The application blindly trusted the `X-Forwarded-For` header (`trustProxy: true`), allowing attackers to bypass IP-based rate limiting by rotating the header value.
+**Learning:** Enabling `trustProxy` by default indiscriminately trusts all upstream hops, which is fatal for rate limiting in direct-access scenarios.
+**Prevention:** Default `trustProxy` to `false`. Require explicit configuration (e.g., `TRUST_PROXY` env var) to enable proxy trust, ensuring it matches the deployment architecture.
