@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Alert, Switch, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Switch, Dimensions, ActivityIndicator } from 'react-native';
 import { api } from '../api/client';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -290,10 +290,23 @@ export default function OnboardingScreen() {
           onPress={handleNext}
           className="bg-blue-500 py-4 px-8 rounded-full items-center min-w-[140px] w-full"
           disabled={saving}
+          accessibilityRole="button"
+          accessibilityLabel={
+            currentStep === 0
+              ? "Start onboarding"
+              : currentStep === STEPS.length - 1
+                ? "Complete onboarding"
+                : "Next step"
+          }
+          accessibilityState={{ disabled: saving }}
         >
-          <Text className="text-white text-base font-bold tracking-widest uppercase">
-            {currentStep === 0 ? "START" : (currentStep === STEPS.length - 1 ? (saving ? "Getting Started..." : "Get Started") : "NEXT")}
-          </Text>
+          {saving ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white text-base font-bold tracking-widest uppercase">
+              {currentStep === 0 ? "START" : (currentStep === STEPS.length - 1 ? "Get Started" : "NEXT")}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView >
