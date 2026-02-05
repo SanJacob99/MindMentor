@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Menu } from 'lucide-react-native';
 import { useAuthStore } from '../store/authStore';
 import { useUser } from '../hooks/useUser';
+import { useSidebarStore } from '../store/sidebarStore';
 
 interface HeaderProps {
     title?: string;
@@ -13,6 +14,9 @@ interface HeaderProps {
 export default function Header({ title = 'Today', showDate = true, onMenuPress }: HeaderProps) {
     const logout = useAuthStore(state => state.logout);
     const { data: user } = useUser();
+    const openSidebar = useSidebarStore(state => state.open);
+
+    const handleMenuPress = onMenuPress ?? openSidebar;
 
     // Get initials from user email or default to 'JD'
     const getInitials = () => {
@@ -32,7 +36,7 @@ export default function Header({ title = 'Today', showDate = true, onMenuPress }
 
     return (
         <View className="flex-row justify-between items-center px-5 pt-4 pb-6">
-            <TouchableOpacity onPress={onMenuPress}>
+            <TouchableOpacity onPress={handleMenuPress}>
                 <Menu color="#fff" size={24} />
             </TouchableOpacity>
 
