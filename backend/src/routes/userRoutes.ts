@@ -90,4 +90,33 @@ export default async function userRoutes(fastify: FastifyInstance) {
       return reply.status(500).send({ error: 'Internal Server Error' });
     }
   });
+
+  // Get tag usage frequencies for sorting context options
+  fastify.get('/tag-frequencies', async (request, reply) => {
+    try {
+      const userId = (request as AuthRequest).user!.userId;
+
+      if (!rateLimiter.check(userId, 20, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
+      const entries = await prisma.journalEntry.findMany({
+        where: { userId },
+        select: { tags: true },
+      });
+
+      // Count frequency of each tag
+      const frequencies: Record<string, number> = {};
+      for (const entry of entries) {
+        for (const tag of entry.tags) {
+          frequencies[tag] = (frequencies[tag] || 0) + 1;
+        }
+      }
+
+      return reply.send(frequencies);
+    } catch (error) {
+      fastify.log.error(error);
+      return reply.status(500).send({ error: 'Internal Server Error' });
+    }
+  });
 }

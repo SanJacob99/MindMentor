@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Platform, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
-import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
+import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal, Plus, ChevronDown, ChevronUp } from 'lucide-react-native';
 import { api } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
 import { useAddEntry, useEntries } from '../hooks/useEntries';
 import { useRecommendations } from '../hooks/useRecommendations';
+import { useContextOptions } from '../hooks/useContextOptions';
 
 import CustomSlider from '../components/CustomSlider';
 import Header from '../components/Header';
@@ -41,7 +42,19 @@ export default function HomeScreen() {
     }
   }, [entries]);
 
-  const contextOptions = ['Sleep', 'Movement', 'Social', 'Workload', 'Outdoors'];
+  // Context options from hook (sorted by frequency)
+  const { options: contextOptions, addContextOption, isAddingOption } = useContextOptions();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Modal state for adding tags (Android/web fallback)
+  const [showAddTagModal, setShowAddTagModal] = useState(false);
+  const [newTagName, setNewTagName] = useState('');
+
+  // Show first 5 options when collapsed, all when expanded
+  const MAX_VISIBLE = 5;
+  const MAX_OPTIONS = 10;
+  const hasMoreOptions = contextOptions.length > MAX_VISIBLE;
+  const visibleOptions = isExpanded ? contextOptions.slice(0, MAX_OPTIONS) : contextOptions.slice(0, MAX_VISIBLE);
 
   const handleSubmit = async () => {
     try {
@@ -59,6 +72,41 @@ export default function HomeScreen() {
       setTags(tags.filter(t => t !== tag));
     } else {
       setTags([...tags, tag]);
+    }
+  };
+
+  const handleAddTag = () => {
+    if (Platform.OS === 'ios') {
+      Alert.prompt(
+        'Add Context Tag',
+        'Enter a name for your custom tag:',
+        async (name) => {
+          if (name) {
+            try {
+              await addContextOption(name);
+            } catch (error) {
+              Alert.alert('Error', error instanceof Error ? error.message : 'Failed to add tag');
+            }
+          }
+        },
+        'plain-text'
+      );
+    } else {
+      // Android/web: show modal
+      setNewTagName('');
+      setShowAddTagModal(true);
+    }
+  };
+
+  const handleSaveNewTag = async () => {
+    if (newTagName.trim()) {
+      try {
+        await addContextOption(newTagName);
+        setShowAddTagModal(false);
+        setNewTagName('');
+      } catch (error) {
+        Alert.alert('Error', error instanceof Error ? error.message : 'Failed to add tag');
+      }
     }
   };
 
@@ -97,7 +145,21 @@ export default function HomeScreen() {
             <Text className="text-slate-500 text-xs mb-3">Only tap what feels relevant</Text>
 
             <View className="flex-row flex-wrap gap-2 mb-6">
-              {contextOptions.map(opt => (
+              {/* Add Tag Button */}
+              <TouchableOpacity
+                onPress={handleAddTag}
+                disabled={isAddingOption}
+                accessibilityRole="button"
+                accessibilityLabel="Add custom context tag"
+                className="px-3 py-2 rounded-full border border-dashed border-slate-600 bg-slate-900 flex-row items-center"
+              >
+                {isAddingOption ? (
+                  <ActivityIndicator size="small" color="#64748b" />
+                ) : (
+                  <Plus size={16} color="#64748b" />
+                )}
+              </TouchableOpacity>
+              {visibleOptions.map(opt => (
                 <TouchableOpacity
                   key={opt}
                   onPress={() => toggleTag(opt)}
@@ -109,6 +171,28 @@ export default function HomeScreen() {
                   <Text className={`text-sm ${tags.includes(opt) ? 'text-white' : 'text-slate-400'}`}>{opt}</Text>
                 </TouchableOpacity>
               ))}
+
+              {/* Expand/Collapse Button */}
+              {hasMoreOptions && (
+                <TouchableOpacity
+                  onPress={() => setIsExpanded(!isExpanded)}
+                  accessibilityRole="button"
+                  accessibilityLabel={isExpanded ? 'Show fewer options' : 'Show more options'}
+                  className="px-3 py-2 rounded-full border border-slate-600 bg-slate-800 flex-row items-center gap-1"
+                >
+                  {isExpanded ? (
+                    <>
+                      <ChevronUp size={14} color="#94a3b8" />
+                      <Text className="text-slate-400 text-xs">Less</Text>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown size={14} color="#94a3b8" />
+                      <Text className="text-slate-400 text-xs">+{contextOptions.length - MAX_VISIBLE}</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
 
             <View className="bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border border-slate-800">
@@ -212,6 +296,49 @@ export default function HomeScreen() {
         </View>
 
       </ScrollView>
+
+      {/* Add Tag Modal (Android/Web) */}
+      <Modal
+        visible={showAddTagModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowAddTagModal(false)}
+      >
+        <View className="flex-1 bg-black/50 justify-center items-center p-5">
+          <View className="bg-slate-900 rounded-2xl p-5 w-full max-w-sm border border-slate-700">
+            <Text className="text-white text-lg font-bold mb-2">Add Context Tag</Text>
+            <Text className="text-slate-400 mb-4">Enter a name for your custom tag:</Text>
+            <TextInput
+              className="bg-slate-800 text-white px-4 py-3 rounded-xl border border-slate-700 mb-4"
+              placeholder="Tag name..."
+              placeholderTextColor="#64748b"
+              value={newTagName}
+              onChangeText={setNewTagName}
+              autoFocus
+              maxLength={30}
+            />
+            <View className="flex-row gap-3">
+              <TouchableOpacity
+                onPress={() => setShowAddTagModal(false)}
+                className="flex-1 py-3 rounded-xl bg-slate-800 items-center"
+              >
+                <Text className="text-slate-400 font-medium">Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSaveNewTag}
+                disabled={!newTagName.trim() || isAddingOption}
+                className={`flex-1 py-3 rounded-xl items-center ${newTagName.trim() ? 'bg-blue-600' : 'bg-slate-700'}`}
+              >
+                {isAddingOption ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text className={`font-medium ${newTagName.trim() ? 'text-white' : 'text-slate-500'}`}>Add</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

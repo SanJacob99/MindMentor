@@ -4,6 +4,7 @@ export const preferencesSchema = z.object({
   reminderTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format (HH:MM)").optional(),
   timezone: z.string().max(50, "Timezone is too long").optional(),
   checkInEnabled: z.boolean().optional(),
+  contextOptions: z.array(z.string().max(30, "Tag name is too long")).max(50, "Too many custom tags").optional(),
 }).strict();
 
 export const signupSchema = z.object({
