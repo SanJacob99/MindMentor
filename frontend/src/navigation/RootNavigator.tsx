@@ -15,6 +15,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import HomeScreen from '../screens/HomeScreen';
 import InsightsScreen from '../screens/InsightsScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import Sidebar from '../components/Sidebar';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -32,7 +33,7 @@ export type TabParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
-function TabNavigator() {
+function Tabs() {
   const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
@@ -79,6 +80,15 @@ function TabNavigator() {
         }}
       />
     </Tab.Navigator>
+  );
+}
+
+function TabNavigator() {
+  return (
+    <View style={{ flex: 1 }}>
+      <Tabs />
+      <Sidebar />
+    </View>
   );
 }
 
