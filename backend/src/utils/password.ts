@@ -39,6 +39,18 @@ export async function verifyPassword(password: string, storedHash: string): Prom
     }
   } else {
     // Fallback to legacy check
-    return legacyHash(password) === storedHash;
+    const computedHash = legacyHash(password);
+
+    // Use default encoding (UTF-8) to treat hashes as opaque strings.
+    // This is safer than 'hex' decoding which might produce empty buffers for invalid inputs.
+    const computedBuffer = Buffer.from(computedHash);
+    const storedBuffer = Buffer.from(storedHash);
+
+    // timingSafeEqual requires buffers of the same length
+    if (computedBuffer.length !== storedBuffer.length) {
+      return false;
+    }
+
+    return timingSafeEqual(computedBuffer, storedBuffer);
   }
 }

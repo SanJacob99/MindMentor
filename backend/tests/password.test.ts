@@ -29,4 +29,21 @@ describe('Password Hashing', () => {
     const isValid = await verifyPassword('wrong', newHash);
     assert.strictEqual(isValid, false, 'Invalid password should be rejected');
   });
+
+  test('legacy hash length mismatch', async () => {
+    const legacyPwd = 'legacyPassword';
+    // 'short' is not 64 hex chars (32 bytes), so buffers will have different lengths
+    const isValid = await verifyPassword(legacyPwd, 'short');
+    assert.strictEqual(isValid, false, 'Should fail if stored hash length is invalid');
+  });
+
+  test('legacy hash content mismatch (same length)', async () => {
+    const legacyPwd = 'legacyPassword';
+    const legacyHash = crypto.createHash('sha256').update(legacyPwd).digest('hex');
+    // Change last char to ensure same length but different content
+    const tamperedHash = legacyHash.slice(0, -1) + (legacyHash.slice(-1) === '0' ? '1' : '0');
+
+    const isValid = await verifyPassword(legacyPwd, tamperedHash);
+    assert.strictEqual(isValid, false, 'Should fail if content differs but length is same');
+  });
 });
