@@ -32,3 +32,8 @@
 **Vulnerability:** The application blindly trusted the `X-Forwarded-For` header (`trustProxy: true`), allowing attackers to bypass IP-based rate limiting by rotating the header value.
 **Learning:** Enabling `trustProxy` by default indiscriminately trusts all upstream hops, which is fatal for rate limiting in direct-access scenarios.
 **Prevention:** Default `trustProxy` to `false`. Require explicit configuration (e.g., `TRUST_PROXY` env var) to enable proxy trust, ensuring it matches the deployment architecture.
+
+## 2026-11-05 - Memory Exhaustion via Unoptimized Database Queries
+**Vulnerability:** The `/insights/summary` endpoint fetched full `JournalEntry` objects including potentially large `text` fields, despite only needing small numeric fields for aggregation. This exposed the server to memory exhaustion if a user had many entries with large text content.
+**Learning:** ORMs like Prisma default to `SELECT *`. In data-intensive endpoints (like analytics), this default is dangerous.
+**Prevention:** Always use `select` to explicitly fetch only the fields required for the operation, especially when dealing with potentially unbounded lists or large text fields.
