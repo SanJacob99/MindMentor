@@ -48,7 +48,7 @@ const CustomSlider = ({ label, value, setValue, icon: Icon, type }: CustomSlider
                 thumbTintColor="#fff"
                 accessibilityLabel={label}
                 accessibilityRole="adjustable"
-                accessibilityValue={{ min: 1, max: 10, now: value, text: textLabel }}
+                accessibilityValue={{ min: 1, max: 10, now: Math.round(value), text: textLabel }}
             />
         </View>
     );

@@ -9,6 +9,7 @@ export interface UserDTO {
   preferences?: {
     reminderTime?: string;
     timezone?: string;
+    contextOptions?: string[];
   };
 }
 
