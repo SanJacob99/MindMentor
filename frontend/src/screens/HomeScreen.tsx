@@ -46,8 +46,9 @@ export default function HomeScreen() {
   // Check if there are meaningful changes to auto-save
   const hasChanges = useCallback(() => {
     if (!latestEntry) {
-      // No previous entry - save if there's any text or tags
-      return text.trim().length > 0 || tags.length > 0;
+      // No previous entry - any interaction is valid for first check-in
+      // (inactivity timer only fires after user interaction, so this is safe)
+      return true;
     }
     return (
       mood !== latestEntry.mood ||
@@ -120,7 +121,7 @@ export default function HomeScreen() {
   }, [entries]);
 
   // Context options from hook (sorted by frequency)
-  const { options: contextOptions, addContextOption, isAddingOption } = useContextOptions();
+  const { options: contextOptions, addContextOption, isAddingOption, isLoading: isContextLoading } = useContextOptions();
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Modal state for adding tags (Android/web fallback)
@@ -261,12 +262,12 @@ export default function HomeScreen() {
                 {/* Add Tag Button */}
                 <TouchableOpacity
                   onPress={handleAddTag}
-                  disabled={isAddingOption}
+                  disabled={isAddingOption || isContextLoading}
                   accessibilityRole="button"
                   accessibilityLabel="Add custom context tag"
                   className="px-3 py-2 rounded-full border border-dashed border-slate-600 bg-slate-900 flex-row items-center"
                 >
-                  {isAddingOption ? (
+                  {isAddingOption || isContextLoading ? (
                     <ActivityIndicator size="small" color="#64748b" />
                   ) : (
                     <Plus size={16} color="#64748b" />

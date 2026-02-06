@@ -12,7 +12,7 @@ interface TagFrequencies {
 export const useContextOptions = () => {
   const { token } = useAuthStore();
   const queryClient = useQueryClient();
-  const { data: user } = useUser();
+  const { data: user, isLoading: isUserLoading } = useUser();
 
   // Fetch tag frequencies
   const { data: frequencies = {} } = useQuery<TagFrequencies>({
@@ -41,6 +41,9 @@ export const useContextOptions = () => {
   // Mutation to add a new context option
   const addContextOptionMutation = useMutation({
     mutationFn: async (newOption: string) => {
+      // Prevent adding tags before user data is loaded to avoid overwriting server-side tags
+      if (isUserLoading) throw new Error('Please wait, loading your data...');
+
       const trimmed = newOption.trim();
       if (!trimmed) throw new Error('Tag name cannot be empty');
       if (trimmed.length > 30) throw new Error('Tag name is too long');
@@ -62,5 +65,6 @@ export const useContextOptions = () => {
     frequencies,
     addContextOption: addContextOptionMutation.mutateAsync,
     isAddingOption: addContextOptionMutation.isPending,
+    isLoading: isUserLoading,
   };
 };
