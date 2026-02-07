@@ -44,7 +44,7 @@
     "babel-preset-expo": "~54.0.10",
     "dotenv": "^17.2.3",
     "react-native-svg-transformer": "^1.5.2",
-    "typescript": "~5.9.2"
+    "typescript": "~5.3.3"
   },
   "private": true
 }

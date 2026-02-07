@@ -74,6 +74,13 @@ export default function InsightsScreen() {
     // Analysis Text Logic
     const analysisText = `Your energy levels remained steady this week, peaking on Wednesday. While stress showed a slight increase towards the weekend, your overall mood trended upwards, reaching its highest point today.`;
 
+    // Accessibility Summary for Chart
+    const currentData = data.dataset[activeTab] || [];
+    const avg = currentData.length > 0 ? (currentData.reduce((a, b) => a + b, 0) / currentData.length).toFixed(1) : '0';
+    const max = currentData.length > 0 ? Math.max(...currentData) : 0;
+    const min = currentData.length > 0 ? Math.min(...currentData) : 0;
+    const chartDescription = `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} chart. Average: ${avg}. Minimum: ${min}. Maximum: ${max}.`;
+
     return (
         <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'right', 'left']} style={{ flex: 1, backgroundColor: '#020617' }}>
             <ScrollView
@@ -113,7 +120,11 @@ export default function InsightsScreen() {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
                             <Text style={{ color: '#475569', fontSize: 12 }}>High</Text>
                         </View>
-                        <View style={{ height: chartHeight + 20, width: chartWidth }}>
+                        <View
+                            style={{ height: chartHeight + 20, width: chartWidth }}
+                            accessibilityRole="image"
+                            accessibilityLabel={chartDescription}
+                        >
                             {/* Grid Lines */}
                             <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 20, justifyContent: 'space-between', paddingVertical: 8, pointerEvents: 'none' }}>
                                 <View style={{ height: 1, backgroundColor: '#1e293b', width: '100%' }} />
@@ -225,6 +236,9 @@ function TabButton({ label, active, onPress, color }: { label: string, active: b
     return (
         <TouchableOpacity
             onPress={onPress}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: active }}
+            accessibilityLabel={`${label} chart${active ? ', selected' : ''}`}
             style={{
                 flexDirection: 'row',
                 alignItems: 'center',
