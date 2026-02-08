@@ -67,12 +67,26 @@ export default function InsightsScreen() {
         });
     };
 
+    const getStats = (values: number[]) => {
+        if (!values || values.length === 0) return { avg: '0', min: 0, max: 0 };
+        const sum = values.reduce((a, b) => a + b, 0);
+        return {
+            avg: (sum / values.length).toFixed(1),
+            min: Math.min(...values),
+            max: Math.max(...values)
+        };
+    };
+
     const moodPath = getPath(data.dataset.mood);
     const stressPath = getPath(data.dataset.stress);
     const energyPath = getPath(data.dataset.energy);
 
     // Analysis Text Logic
     const analysisText = `Your energy levels remained steady this week, peaking on Wednesday. While stress showed a slight increase towards the weekend, your overall mood trended upwards, reaching its highest point today.`;
+
+    const activeData = data.dataset[activeTab];
+    const stats = getStats(activeData);
+    const chartAccessibilityLabel = `${activeTab} chart for the last 7 days. Average: ${stats.avg}, Minimum: ${stats.min}, Maximum: ${stats.max}.`;
 
     return (
         <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'right', 'left']} style={{ flex: 1, backgroundColor: '#020617' }}>
@@ -87,7 +101,10 @@ export default function InsightsScreen() {
                     <Text style={{ color: '#94a3b8', textAlign: 'center', marginBottom: 24 }}>What's been changing lately</Text>
 
                     {/* Tabs */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12, paddingHorizontal: 20, marginBottom: 32 }}>
+                    <View
+                        style={{ flexDirection: 'row', justifyContent: 'center', gap: 12, paddingHorizontal: 20, marginBottom: 32 }}
+                        accessibilityRole="tablist"
+                    >
                         <TabButton
                             label="Mood"
                             active={activeTab === 'mood'}
@@ -109,7 +126,11 @@ export default function InsightsScreen() {
                     </View>
 
                     {/* Line Chart */}
-                    <View style={{ marginHorizontal: 20, marginBottom: 32 }}>
+                    <View
+                        style={{ marginHorizontal: 20, marginBottom: 32 }}
+                        accessibilityRole="image"
+                        accessibilityLabel={chartAccessibilityLabel}
+                    >
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
                             <Text style={{ color: '#475569', fontSize: 12 }}>High</Text>
                         </View>
@@ -165,7 +186,11 @@ export default function InsightsScreen() {
                     </View>
 
                     {/* Scatter Chart */}
-                    <View style={{ marginHorizontal: 20, marginBottom: 40 }}>
+                    <View
+                        style={{ marginHorizontal: 20, marginBottom: 40 }}
+                        accessibilityRole="image"
+                        accessibilityLabel="Scatter chart comparing Stimulus vs Mood. Categories shown: Environment, Social, Work."
+                    >
                         <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 16, textTransform: 'uppercase', letterSpacing: 0.5 }}>Stimulus vs Mood</Text>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -225,6 +250,9 @@ function TabButton({ label, active, onPress, color }: { label: string, active: b
     return (
         <TouchableOpacity
             onPress={onPress}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: active }}
+            accessibilityLabel={`${label} chart`}
             style={{
                 flexDirection: 'row',
                 alignItems: 'center',
