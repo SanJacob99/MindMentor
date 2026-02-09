@@ -12,7 +12,7 @@ import { useSidebarStore } from '../store/sidebarStore';
 import PreferencesScreen from '../screens/PreferencesScreen';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.5;
+const SIDEBAR_WIDTH = Math.min(SCREEN_WIDTH * 0.85, 320);
 
 export default function Sidebar() {
   const isOpen = useSidebarStore((state) => state.isOpen);

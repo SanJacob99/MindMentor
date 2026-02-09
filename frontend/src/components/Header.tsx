@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Menu } from 'lucide-react-native';
-import { useAuthStore } from '../store/authStore';
 import { useUser } from '../hooks/useUser';
 import { useSidebarStore } from '../store/sidebarStore';
 
@@ -12,29 +11,10 @@ interface HeaderProps {
 }
 
 export default function Header({ title = 'Today', showDate = true, onMenuPress }: HeaderProps) {
-    const logout = useAuthStore(state => state.logout);
     const { data: user } = useUser();
     const openSidebar = useSidebarStore(state => state.open);
 
     const handleMenuPress = onMenuPress ?? openSidebar;
-
-    const handleLogoutPress = () => {
-        Alert.alert(
-            "Log Out",
-            "Are you sure you want to log out?",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel"
-                },
-                {
-                    text: "Log Out",
-                    onPress: logout,
-                    style: "destructive"
-                }
-            ]
-        );
-    };
 
     // Get initials from user email or default to 'JD'
     const getInitials = () => {
@@ -70,11 +50,11 @@ export default function Header({ title = 'Today', showDate = true, onMenuPress }
             </View>
 
             <TouchableOpacity
-                onPress={handleLogoutPress}
+                onPress={openSidebar}
                 className="bg-blue-900 w-10 h-10 rounded-full justify-center items-center"
                 accessibilityRole="button"
-                accessibilityLabel={`Signed in as ${user?.email || 'User'}. Double tap to log out.`}
-                accessibilityHint="Logs you out of the application"
+                accessibilityLabel={`Signed in as ${user?.email || 'User'}. Double tap to open profile settings.`}
+                accessibilityHint="Opens the settings menu"
             >
                 <Text className="text-blue-300 font-bold">{getInitials()}</Text>
             </TouchableOpacity>
