@@ -10,6 +10,12 @@ type TabType = 'mood' | 'stress' | 'energy';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+const SCATTER_DATA = [
+    { id: 'ENV', label: 'Environment', values: [2, 3, 2.5, 3.5, 1.5] },
+    { id: 'REL', label: 'Social', values: [7, 8, 7.5, 9] },
+    { id: 'ACH', label: 'Work', values: [6, 7, 6.5, 8, 7.5] },
+];
+
 export default function InsightsScreen() {
     const { data, isLoading: loading } = useInsightsSummary('7d');
     const [activeTab, setActiveTab] = useState<TabType>('mood');
@@ -80,6 +86,14 @@ export default function InsightsScreen() {
     const max = currentData.length > 0 ? Math.max(...currentData) : 0;
     const min = currentData.length > 0 ? Math.min(...currentData) : 0;
     const chartDescription = `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} chart. Average: ${avg}. Minimum: ${min}. Maximum: ${max}.`;
+
+    const getScatterAccessibilityLabel = () => {
+        const summaries = SCATTER_DATA.map(category => {
+            const avg = (category.values.reduce((a: number, b: number) => a + b, 0) / category.values.length).toFixed(1);
+            return `${category.label} average mood: ${avg}/10`;
+        });
+        return `Scatter chart comparing stimulus vs mood. ${summaries.join('. ')}.`;
+    };
 
     return (
         <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'right', 'left']} style={{ flex: 1, backgroundColor: '#020617' }}>
@@ -183,7 +197,11 @@ export default function InsightsScreen() {
                             <Text style={{ color: '#475569', fontSize: 12 }}>High</Text>
                         </View>
 
-                        <View style={{ height: 180, width: chartWidth }}>
+                        <View
+                            style={{ height: 180, width: chartWidth }}
+                            accessibilityRole="image"
+                            accessibilityLabel={getScatterAccessibilityLabel()}
+                        >
                             {/* Grid Lines */}
                             <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 150, justifyContent: 'space-between', paddingVertical: 8, pointerEvents: 'none' }}>
                                 <View style={{ height: 1, backgroundColor: '#1e293b', width: '100%' }} />
@@ -193,11 +211,7 @@ export default function InsightsScreen() {
 
                             <Svg height={150} width={chartWidth}>
                                 {/* Mock Data: ENV, REL, ACH */}
-                                {[
-                                    { id: 'ENV', values: [2, 3, 2.5, 3.5, 1.5] },
-                                    { id: 'REL', values: [7, 8, 7.5, 9] },
-                                    { id: 'ACH', values: [6, 7, 6.5, 8, 7.5] },
-                                ].map((cat, colIndex) => {
+                                {SCATTER_DATA.map((cat, colIndex) => {
                                     const colWidth = chartWidth / 3;
                                     const centerX = colIndex * colWidth + colWidth / 2;
                                     return cat.values.map((val, vIndex) => {
