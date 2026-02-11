@@ -13,12 +13,8 @@ interface SettingsRowProps {
 }
 
 function SettingsRow({ icon, label, value, onPress }: SettingsRowProps) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      className="flex-row items-center py-4 border-b border-slate-800"
-      activeOpacity={0.7}
-    >
+  const content = (
+    <>
       <View className="w-9 h-9 rounded-lg bg-slate-800 items-center justify-center mr-3">
         {icon}
       </View>
@@ -26,8 +22,28 @@ function SettingsRow({ icon, label, value, onPress }: SettingsRowProps) {
         <Text className="text-white text-base">{label}</Text>
         {value && <Text className="text-slate-400 text-sm mt-0.5">{value}</Text>}
       </View>
-      <ChevronRight size={18} color="#64748b" />
-    </TouchableOpacity>
+      {onPress && <ChevronRight size={18} color="#64748b" />}
+    </>
+  );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        className="flex-row items-center py-4 border-b border-slate-800"
+        activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel={value ? `${label}, ${value}` : label}
+      >
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View className="flex-row items-center py-4 border-b border-slate-800">
+      {content}
+    </View>
   );
 }
 
@@ -109,6 +125,8 @@ export default function PreferencesScreen() {
           onPress={handleLogout}
           className="flex-row items-center py-4 mt-4 mb-8"
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Log Out"
         >
           <View className="w-9 h-9 rounded-lg bg-red-900/30 items-center justify-center mr-3">
             <LogOut size={18} color="#ef4444" />
