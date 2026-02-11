@@ -57,7 +57,7 @@ describe('computeWeekdayPatterns', () => {
       makeEntry('2026-02-02T12:00:00Z', 8, 3, 7), // Monday
       makeEntry('2026-02-03T12:00:00Z', 5, 6, 5), // Tuesday
       makeEntry('2026-02-07T12:00:00Z', 9, 2, 8), // Saturday
-      makeEntry('2026-02-08T12:00:00Z', 9, 2, 8), // Sunday
+      makeEntry('2026-02-08T12:00:00Z', 8, 3, 7), // Sunday
     ];
 
     const result = computeWeekdayPatterns(entries);
