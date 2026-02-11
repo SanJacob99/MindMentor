@@ -5,7 +5,8 @@ export const createEntrySchema = z.object({
   stress: z.number().min(0).max(10),
   energy: z.number().min(0).max(10),
   text: z.string().max(10000, "Text is too long").optional(),
-  tags: z.array(z.string().max(50, "Tag is too long")).max(10, "Too many tags").default([]),
+  tags: z.array(z.string().max(50, "Tag is too long")).max(10, "Too many tags").default([])
+    .transform((tags) => [...new Set(tags.map((t) => t.trim().toLowerCase()))].filter(Boolean)),
 });
 
 export const entryQuerySchema = z.object({

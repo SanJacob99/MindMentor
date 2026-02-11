@@ -423,8 +423,9 @@ export function computeTagCombinations(
   const tagCounts = new Map<string, number>();
   for (const e of entries) {
     for (const tag of e.tags) {
+      // Skip tags we haven't seen if we've hit the cap, but still count known tags
+      if (!tagCounts.has(tag) && tagCounts.size >= MAX_TAGS) continue;
       tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-      if (tagCounts.size >= MAX_TAGS) break;
     }
   }
 

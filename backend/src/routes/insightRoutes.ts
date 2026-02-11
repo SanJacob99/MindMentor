@@ -260,12 +260,15 @@ export default async function insightRoutes(fastify: FastifyInstance) {
       const since = new Date();
       since.setDate(since.getDate() - days);
 
-      const entries = await prisma.journalEntry.findMany({
+      // Fetch newest entries first (desc) to avoid dropping recent data when capped,
+      // then re-sort ascending for chronological analysis
+      const entriesDesc = await prisma.journalEntry.findMany({
         where: { userId, createdAt: { gte: since } },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: 'desc' },
         select: { createdAt: true, mood: true, stress: true, energy: true },
         take: 500,
       });
+      const entries = entriesDesc.reverse();
 
       if (entries.length < 7) {
         return reply.send({
@@ -276,7 +279,7 @@ export default async function insightRoutes(fastify: FastifyInstance) {
         });
       }
 
-      // Read user timezone preference
+      // Read user timezone preference (supports both IANA string and legacy numeric offset)
       let tzOffsetMinutes = 0;
       try {
         const user = await prisma.user.findUnique({
@@ -285,7 +288,16 @@ export default async function insightRoutes(fastify: FastifyInstance) {
         });
         if (user?.preferences && typeof user.preferences === 'object') {
           const prefs = user.preferences as Record<string, unknown>;
-          if (typeof prefs.timezoneOffset === 'number') {
+          if (typeof prefs.timezone === 'string') {
+            // IANA timezone string (e.g. "America/New_York") - compute current offset
+            try {
+              const now = new Date();
+              const utcStr = now.toLocaleString('en-US', { timeZone: 'UTC' });
+              const tzStr = now.toLocaleString('en-US', { timeZone: prefs.timezone });
+              tzOffsetMinutes = (new Date(tzStr).getTime() - new Date(utcStr).getTime()) / 60000;
+            } catch { /* invalid timezone, fall back to UTC */ }
+          } else if (typeof prefs.timezoneOffset === 'number') {
+            // Legacy numeric offset in minutes
             tzOffsetMinutes = prefs.timezoneOffset;
           }
         }
@@ -349,12 +361,13 @@ export default async function insightRoutes(fastify: FastifyInstance) {
       const since = new Date();
       since.setDate(since.getDate() - days);
 
-      const entries = await prisma.journalEntry.findMany({
+      const entriesDesc = await prisma.journalEntry.findMany({
         where: { userId, createdAt: { gte: since } },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: 'desc' },
         select: { createdAt: true, mood: true, stress: true, energy: true, tags: true },
         take: 500,
       });
+      const entries = entriesDesc.reverse();
 
       if (entries.length === 0) {
         return reply.send({
@@ -416,12 +429,13 @@ export default async function insightRoutes(fastify: FastifyInstance) {
       const since = new Date();
       since.setDate(since.getDate() - days);
 
-      const entries = await prisma.journalEntry.findMany({
+      const entriesDesc = await prisma.journalEntry.findMany({
         where: { userId, createdAt: { gte: since } },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: 'desc' },
         select: { text: true, mood: true, createdAt: true },
         take: 200,
       });
+      const entries = entriesDesc.reverse();
 
       const entriesWithText = entries.filter((e) => e.text && e.text.trim().length > 0);
 
