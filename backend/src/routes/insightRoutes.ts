@@ -2,6 +2,26 @@ import { FastifyInstance } from 'fastify';
 import prisma from '../utils/db';
 import { authenticate, AuthRequest } from '../middlewares/authMiddleware';
 import { RateLimiter } from '../utils/rateLimiter';
+import { patternQuerySchema } from '../schemas/insightSchemas';
+import {
+  computeHourlyPatterns,
+  computeWeekdayPatterns,
+  computeMonthlyTrend,
+  computeStreaks,
+  computeRecoveryPatterns,
+  computeTagCombinations,
+} from '../utils/patternAnalysis';
+import {
+  analyzeSentiment,
+  extractKeywords,
+  computeEmotionBreakdown,
+} from '../utils/textAnalysis';
+import {
+  generateTimeInsights,
+  generateStreakInsights,
+  generateTagInsights,
+  generateTextInsights,
+} from '../utils/insightGenerator';
 
 const rateLimiter = new RateLimiter();
 
@@ -214,6 +234,282 @@ export default async function insightRoutes(fastify: FastifyInstance) {
         entryCount: entries.length
       });
 
+    } catch (error) {
+      fastify.log.error(error);
+      return reply.status(500).send({ error: 'Internal Server Error' });
+    }
+  });
+
+  // --- Emotional Pattern Analysis Endpoints ---
+
+  fastify.get('/patterns', async (request, reply) => {
+    try {
+      const userId = (request as AuthRequest).user!.userId;
+
+      if (!rateLimiter.check(userId, 5, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
+      const parsed = patternQuerySchema.safeParse(request.query);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: 'Invalid query parameters.' });
+      }
+
+      const { range } = parsed.data;
+      const days = range === '90d' ? 90 : 30;
+      const since = new Date();
+      since.setDate(since.getDate() - days);
+
+      const entries = await prisma.journalEntry.findMany({
+        where: { userId, createdAt: { gte: since } },
+        orderBy: { createdAt: 'asc' },
+        select: { createdAt: true, mood: true, stress: true, energy: true },
+        take: 500,
+      });
+
+      if (entries.length < 7) {
+        return reply.send({
+          range,
+          entryCount: entries.length,
+          minimumDataRequired: 7,
+          message: `Keep journaling! We need ${7 - entries.length} more entries to show patterns.`,
+        });
+      }
+
+      // Read user timezone preference
+      let tzOffsetMinutes = 0;
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { preferences: true },
+        });
+        if (user?.preferences && typeof user.preferences === 'object') {
+          const prefs = user.preferences as Record<string, unknown>;
+          if (typeof prefs.timezoneOffset === 'number') {
+            tzOffsetMinutes = prefs.timezoneOffset;
+          }
+        }
+      } catch { /* default to UTC */ }
+
+      const timeOfDay = computeHourlyPatterns(entries, tzOffsetMinutes);
+      const weekday = computeWeekdayPatterns(entries, tzOffsetMinutes);
+      const trends = computeMonthlyTrend(entries);
+      const streaks = computeStreaks(entries);
+      const recovery = computeRecoveryPatterns(entries);
+
+      const timeInsights = generateTimeInsights(
+        timeOfDay.buckets, timeOfDay.bestBucket, timeOfDay.worstBucket,
+        weekday.days, weekday.bestDay, weekday.worstDay,
+        trends.direction
+      );
+      const streakInsights = generateStreakInsights(
+        streaks.current, streaks.best, streaks.volatility, recovery
+      );
+      const insights = [...timeInsights, ...streakInsights].slice(0, 10);
+
+      return reply.send({
+        range,
+        entryCount: entries.length,
+        timeOfDay,
+        weekday,
+        trends: {
+          weeks: trends.weeks,
+          direction: trends.direction,
+          slopes: trends.slopes,
+        },
+        streaks: {
+          current: streaks.current,
+          best: streaks.best,
+          volatility: streaks.volatility,
+        },
+        recovery,
+        insights,
+      });
+    } catch (error) {
+      fastify.log.error(error);
+      return reply.status(500).send({ error: 'Internal Server Error' });
+    }
+  });
+
+  fastify.get('/tags', async (request, reply) => {
+    try {
+      const userId = (request as AuthRequest).user!.userId;
+
+      if (!rateLimiter.check(userId, 5, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
+      const parsed = patternQuerySchema.safeParse(request.query);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: 'Invalid query parameters.' });
+      }
+
+      const { range } = parsed.data;
+      const days = range === '90d' ? 90 : 30;
+      const since = new Date();
+      since.setDate(since.getDate() - days);
+
+      const entries = await prisma.journalEntry.findMany({
+        where: { userId, createdAt: { gte: since } },
+        orderBy: { createdAt: 'asc' },
+        select: { createdAt: true, mood: true, stress: true, energy: true, tags: true },
+        take: 500,
+      });
+
+      if (entries.length === 0) {
+        return reply.send({
+          range,
+          entryCount: 0,
+          baseline: { mood: 0, stress: 0, energy: 0 },
+          tagAnalysis: [],
+          combinations: [],
+          negativeCorrelations: [],
+          insights: [],
+        });
+      }
+
+      const baseline = {
+        mood: entries.reduce((s, e) => s + e.mood, 0) / entries.length,
+        stress: entries.reduce((s, e) => s + e.stress, 0) / entries.length,
+        energy: entries.reduce((s, e) => s + e.energy, 0) / entries.length,
+      };
+
+      const result = computeTagCombinations(entries, baseline);
+      const insights = generateTagInsights(
+        result.tagAnalysis, result.combinations, result.negativeCorrelations
+      );
+
+      return reply.send({
+        range,
+        entryCount: entries.length,
+        baseline: {
+          mood: Math.round(baseline.mood * 100) / 100,
+          stress: Math.round(baseline.stress * 100) / 100,
+          energy: Math.round(baseline.energy * 100) / 100,
+        },
+        tagAnalysis: result.tagAnalysis,
+        combinations: result.combinations,
+        negativeCorrelations: result.negativeCorrelations,
+        insights,
+      });
+    } catch (error) {
+      fastify.log.error(error);
+      return reply.status(500).send({ error: 'Internal Server Error' });
+    }
+  });
+
+  fastify.get('/text-analysis', async (request, reply) => {
+    try {
+      const userId = (request as AuthRequest).user!.userId;
+
+      if (!rateLimiter.check(userId, 3, 60 * 1000)) {
+        return reply.status(429).send({ error: 'Too many requests, please try again later.' });
+      }
+
+      const parsed = patternQuerySchema.safeParse(request.query);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: 'Invalid query parameters.' });
+      }
+
+      const { range } = parsed.data;
+      const days = range === '90d' ? 90 : 30;
+      const since = new Date();
+      since.setDate(since.getDate() - days);
+
+      const entries = await prisma.journalEntry.findMany({
+        where: { userId, createdAt: { gte: since } },
+        orderBy: { createdAt: 'asc' },
+        select: { text: true, mood: true, createdAt: true },
+        take: 200,
+      });
+
+      const entriesWithText = entries.filter((e) => e.text && e.text.trim().length > 0);
+
+      if (entriesWithText.length < 5) {
+        return reply.send({
+          range,
+          totalEntries: entries.length,
+          entriesWithText: entriesWithText.length,
+          minimumDataRequired: 5,
+          message: `Keep adding notes to your entries! We need ${5 - entriesWithText.length} more entries with text to show analysis.`,
+        });
+      }
+
+      // Sentiment analysis - overall and weekly trend
+      const sentimentScores = entriesWithText.map((e) => ({
+        ...analyzeSentiment(e.text!.slice(0, 1000)),
+        createdAt: e.createdAt,
+      }));
+
+      const overallSentiment = sentimentScores.length > 0
+        ? Math.round((sentimentScores.reduce((s, r) => s + r.score, 0) / sentimentScores.length) * 100) / 100
+        : 0;
+
+      // Weekly sentiment trend
+      const weekMap = new Map<string, number[]>();
+      for (const s of sentimentScores) {
+        const d = s.createdAt;
+        const weekStart = new Date(d);
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+        const weekLabel = weekStart.toISOString().split('T')[0];
+        if (!weekMap.has(weekLabel)) weekMap.set(weekLabel, []);
+        weekMap.get(weekLabel)!.push(s.score);
+      }
+
+      const sentimentTrend = Array.from(weekMap.entries())
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([weekLabel, scores]) => ({
+          weekLabel,
+          avgSentiment: Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100) / 100,
+        }));
+
+      // Determine sentiment direction via simple slope
+      let sentimentDirection: 'improving' | 'declining' | 'stable' = 'stable';
+      if (sentimentTrend.length >= 2) {
+        const vals = sentimentTrend.map((t) => t.avgSentiment);
+        const firstHalf = vals.slice(0, Math.floor(vals.length / 2));
+        const secondHalf = vals.slice(Math.floor(vals.length / 2));
+        const avgFirst = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
+        const avgSecond = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
+        if (avgSecond - avgFirst > 0.1) sentimentDirection = 'improving';
+        else if (avgFirst - avgSecond > 0.1) sentimentDirection = 'declining';
+      }
+
+      // Keywords
+      const keywordEntries = entriesWithText.map((e) => ({
+        text: e.text!,
+        mood: e.mood,
+      }));
+      const keywords = extractKeywords(keywordEntries, 30);
+
+      // Emotion breakdown
+      const emotions = computeEmotionBreakdown(keywordEntries);
+
+      // Baseline mood for insight generation
+      const baselineMood = entries.length > 0
+        ? entries.reduce((s, e) => s + e.mood, 0) / entries.length
+        : 5;
+
+      const insights = generateTextInsights(
+        keywords, sentimentDirection, emotions, baselineMood
+      );
+
+      return reply.send({
+        range,
+        totalEntries: entries.length,
+        entriesWithText: entriesWithText.length,
+        sentiment: {
+          overall: overallSentiment,
+          trend: sentimentTrend,
+          direction: sentimentDirection,
+        },
+        keywords,
+        emotions: {
+          breakdown: emotions,
+          primary: emotions.length > 0 ? emotions[0].emotion : 'neutral',
+        },
+        insights,
+      });
     } catch (error) {
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Internal Server Error' });
