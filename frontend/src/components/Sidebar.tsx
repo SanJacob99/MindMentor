@@ -44,11 +44,21 @@ export default function Sidebar() {
     <>
       {/* Dark overlay behind the sidebar */}
       <Animated.View style={[styles.overlay, overlayStyle]}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={close} />
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={close}
+          accessibilityRole="button"
+          accessibilityLabel="Close sidebar"
+          accessibilityHint="Closes the settings menu"
+        />
       </Animated.View>
 
       {/* Sidebar panel */}
-      <Animated.View style={[styles.sidebar, { width: SIDEBAR_WIDTH }, sidebarStyle]}>
+      <Animated.View
+        style={[styles.sidebar, { width: SIDEBAR_WIDTH }, sidebarStyle]}
+        accessibilityViewIsModal={isOpen}
+        onAccessibilityEscape={close}
+      >
         <PreferencesScreen />
       </Animated.View>
     </>

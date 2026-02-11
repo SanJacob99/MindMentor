@@ -12,3 +12,7 @@
 ## 2025-10-27 - Accessible Data Visualization
 **Learning:** Complex charts (Scatter, Line) rendered with SVG are completely invisible to screen readers. Relying on visual patterns excludes blind users.
 **Action:** Always wrap the chart container in a View with accessibilityRole="image" and generate a dynamic accessibilityLabel that summarizes the key data points (e.g., averages, trends).
+
+## 2024-05-21 - [Modal Accessibility]
+**Learning:** `Animated.View` requires `onAccessibilityEscape` (not `accessibilityPerformEscape`) to handle the "scrub" gesture on iOS for closing modals. Also, `accessibilityViewIsModal` effectively traps screen reader focus even on non-native-modal views.
+**Action:** Use `onAccessibilityEscape` and `accessibilityViewIsModal` for custom modal implementations to ensure full accessibility compliance.
