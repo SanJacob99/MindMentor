@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Platform, A
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
-import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal, Plus, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal, Plus, ChevronDown, ChevronUp, Check } from 'lucide-react-native';
 import { api } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
@@ -278,11 +278,15 @@ export default function HomeScreen() {
                     key={opt}
                     onPress={() => toggleTag(opt)}
                     accessibilityRole="checkbox"
-                    accessibilityLabel={`Toggle ${opt} context`}
+                    accessibilityLabel={opt}
                     accessibilityState={{ checked: tags.includes(opt) }}
-                    className={`px-4 py-2 rounded-full border ${tags.includes(opt) ? 'bg-slate-700 border-slate-600' : 'bg-slate-900 border-slate-700'}`}
+                    style={{
+                      backgroundColor: tags.includes(opt) ? '#1d4ed833' : '#0f172a'
+                    }}
+                    className={`px-4 py-2 rounded-full border flex-row items-center gap-2 ${tags.includes(opt) ? 'border-blue-500' : 'border-slate-700'}`}
                   >
-                    <Text className={`text-sm ${tags.includes(opt) ? 'text-white' : 'text-slate-400'}`}>{opt}</Text>
+                    {tags.includes(opt) && <Check size={14} color="#60a5fa" />}
+                    <Text className={`text-sm ${tags.includes(opt) ? 'text-blue-100' : 'text-slate-400'}`}>{opt}</Text>
                   </TouchableOpacity>
                 ))}
 
