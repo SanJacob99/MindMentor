@@ -1,31 +1,36 @@
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
 Starting project at /app/frontend
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
-Starting Metro Bundler
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
 [dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+Starting Metro Bundler
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 82.5% (481/572)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 82.5% (1016/2418)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 82.5% (2128/2418)
-| [dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ 93.4% (2594/2686)
-Web Bundled 16569ms index.ts (2854 modules)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 54.9% ( 90/181)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 54.9% (228/425)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 54.9% ( 483/2274)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 54.9% (1305/2274)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 86.5% (2165/2362)
+| [dotenv@17.2.4] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ 89.9% (2518/2655)
+Web Bundled 24122ms index.ts (2861 modules)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 106ms index.ts (1 module)
+Web Bundled 114ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 110ms index.ts (1 module)
+Web Bundled 111ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 104ms index.ts (1 module)
+Web Bundled 99ms index.ts (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 102ms index.ts (1 module)
  LOG  [web] Logs will appear in the browser console
