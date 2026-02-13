@@ -7,6 +7,8 @@ import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRigh
 import { api } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '../navigation/RootNavigator';
 import { useAddEntry, useEntries } from '../hooks/useEntries';
 import { useRecommendations } from '../hooks/useRecommendations';
 import { useContextOptions } from '../hooks/useContextOptions';
@@ -15,7 +17,7 @@ import CustomSlider from '../components/CustomSlider';
 import Header from '../components/Header';
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<BottomTabNavigationProp<TabParamList>>();
   const logout = useAuthStore(state => state.logout);
 
   // Form State
@@ -362,7 +364,12 @@ export default function HomeScreen() {
           <View className="px-5 mt-8">
             <View className="flex-row justify-between items-center mb-4">
               <Text className="text-white text-xl font-bold">Patterns so far</Text>
-              <TouchableOpacity accessibilityRole="button" accessibilityLabel="View all patterns">
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel="View all patterns"
+                accessibilityHint="Navigates to insights screen"
+                onPress={() => navigation.navigate('Insights')}
+              >
                 <Text className="text-blue-500 font-medium">View all</Text>
               </TouchableOpacity>
             </View>

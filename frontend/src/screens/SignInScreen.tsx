@@ -96,6 +96,7 @@ export default function SignInScreen() {
                 onPress={() => setShowPassword(!showPassword)}
                 accessibilityRole="button"
                 accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 {showPassword ? (
                   <EyeOff color="#94a3b8" size={20} />
