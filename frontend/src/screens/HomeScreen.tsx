@@ -390,7 +390,11 @@ export default function HomeScreen() {
               </View>
 
               {/* Chart Visualization */}
-              <View className="h-40 w-full relative">
+              <View
+                className="h-40 w-full relative"
+                accessibilityRole="image"
+                accessibilityLabel="Mood history chart for the last 7 days."
+              >
                 {/* Grid lines */}
                 <View className="absolute inset-0 justify-between py-2">
                   <View className="h-[1px] bg-slate-800 w-full" />
