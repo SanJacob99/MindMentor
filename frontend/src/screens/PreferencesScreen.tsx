@@ -41,7 +41,11 @@ function SettingsRow({ icon, label, value, onPress }: SettingsRowProps) {
   }
 
   return (
-    <View className="flex-row items-center py-4 border-b border-slate-800">
+    <View
+      className="flex-row items-center py-4 border-b border-slate-800"
+      accessible={true}
+      accessibilityLabel={value ? `${label}, ${value}` : label}
+    >
       {content}
     </View>
   );
@@ -78,7 +82,11 @@ export default function PreferencesScreen() {
 
       <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
         {/* Profile Section */}
-        <View className="items-center py-6 border-b border-slate-800 mb-2">
+        <View
+          className="items-center py-6 border-b border-slate-800 mb-2"
+          accessible={true}
+          accessibilityLabel={`Signed in as ${user?.email ?? 'User'}`}
+        >
           <View className="bg-blue-900 w-16 h-16 rounded-full justify-center items-center mb-3">
             <Text className="text-blue-300 text-xl font-bold">{getInitials()}</Text>
           </View>
