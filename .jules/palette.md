@@ -16,3 +16,7 @@
 ## 2024-05-21 - [Modal Accessibility]
 **Learning:** `Animated.View` requires `onAccessibilityEscape` (not `accessibilityPerformEscape`) to handle the "scrub" gesture on iOS for closing modals. Also, `accessibilityViewIsModal` effectively traps screen reader focus even on non-native-modal views.
 **Action:** Use `onAccessibilityEscape` and `accessibilityViewIsModal` for custom modal implementations to ensure full accessibility compliance.
+
+## 2026-03-03 - Grouping Information for Screen Readers
+**Learning:** Read-only lists or settings rows rendered as individual text nodes force screen reader users to navigate too many elements (e.g., "Notifications", then "Enabled"). Icon-only buttons (like "Close") without labels are completely unusable.
+**Action:** Group related text elements using `accessible={true}` on the container and provide a combined `accessibilityLabel`. Always add `accessibilityLabel` to icon-only `TouchableOpacity` components.

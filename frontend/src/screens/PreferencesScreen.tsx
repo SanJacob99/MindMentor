@@ -75,7 +75,12 @@ export default function PreferencesScreen() {
       {/* Header */}
       <View className="flex-row items-center justify-between px-5 pt-4 pb-3">
         <Text className="text-white text-lg font-bold">Settings</Text>
-        <TouchableOpacity onPress={close} className="p-1">
+        <TouchableOpacity
+          onPress={close}
+          className="p-1"
+          accessibilityRole="button"
+          accessibilityLabel="Close settings"
+        >
           <X size={22} color="#94a3b8" />
         </TouchableOpacity>
       </View>

@@ -43,6 +43,18 @@ export default function TagImpactChart({ tagAnalysis }: Props) {
   const centerX = labelWidth + chartAreaWidth / 2;
   const totalHeight = sorted.length * (barHeight + gap) + 10;
 
+  // Calculate accessibility label summary
+  const bestTag = sorted.filter(t => t.deviations.mood > 0).sort((a, b) => b.deviations.mood - a.deviations.mood)[0];
+  const worstTag = sorted.filter(t => t.deviations.mood < 0).sort((a, b) => a.deviations.mood - b.deviations.mood)[0];
+
+  let a11ySummary = `Tag impact chart showing top ${sorted.length} tags.`;
+  if (bestTag) {
+    a11ySummary += ` Highest positive: ${bestTag.tag} (+${Math.round(bestTag.deviations.mood)}%).`;
+  }
+  if (worstTag) {
+    a11ySummary += ` Highest negative: ${worstTag.tag} (${Math.round(worstTag.deviations.mood)}%).`;
+  }
+
   return (
     <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 20, borderWidth: 1, borderColor: '#1e293b' }}>
       <Text style={{ color: 'white', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 16 }}>
@@ -51,7 +63,7 @@ export default function TagImpactChart({ tagAnalysis }: Props) {
 
       <View
         accessibilityRole="image"
-        accessibilityLabel={`Tag impact chart showing ${sorted.length} tags and their mood deviation from baseline.`}
+        accessibilityLabel={a11ySummary}
       >
         <Svg width={chartWidth} height={totalHeight}>
           {/* Center line */}
