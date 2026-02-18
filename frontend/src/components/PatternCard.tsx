@@ -74,6 +74,9 @@ export default function PatternCard({ hourlyBuckets, bestBucket, worstBucket, we
       <View style={{ flexDirection: 'row', gap: 8, marginBottom: 12 }}>
         <TouchableOpacity
           onPress={() => setView('timeOfDay')}
+          accessibilityRole="tab"
+          accessibilityState={{ selected: view === 'timeOfDay' }}
+          accessibilityLabel={`Time of Day${Platform.OS === 'web' && view === 'timeOfDay' ? ', selected' : ''}`}
           style={{
             paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8,
             backgroundColor: view === 'timeOfDay' ? '#1e293b' : 'transparent',
@@ -84,6 +87,9 @@ export default function PatternCard({ hourlyBuckets, bestBucket, worstBucket, we
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setView('weekday')}
+          accessibilityRole="tab"
+          accessibilityState={{ selected: view === 'weekday' }}
+          accessibilityLabel={`Weekday${Platform.OS === 'web' && view === 'weekday' ? ', selected' : ''}`}
           style={{
             paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8,
             backgroundColor: view === 'weekday' ? '#1e293b' : 'transparent',
@@ -100,6 +106,9 @@ export default function PatternCard({ hourlyBuckets, bestBucket, worstBucket, we
           <TouchableOpacity
             key={m}
             onPress={() => setMetric(m)}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: metric === m }}
+            accessibilityLabel={`${m}${Platform.OS === 'web' && metric === m ? ', selected' : ''}`}
             style={{
               flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 4,
               borderRadius: 12, backgroundColor: metric === m ? '#1e293b' : 'transparent',
