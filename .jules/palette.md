@@ -20,3 +20,7 @@
 ## 2026-03-03 - Grouping Information for Screen Readers
 **Learning:** Read-only lists or settings rows rendered as individual text nodes force screen reader users to navigate too many elements (e.g., "Notifications", then "Enabled"). Icon-only buttons (like "Close") without labels are completely unusable.
 **Action:** Group related text elements using `accessible={true}` on the container and provide a combined `accessibilityLabel`. Always add `accessibilityLabel` to icon-only `TouchableOpacity` components.
+
+## 2026-06-25 - Accessible Links in React Native
+**Learning:** `TouchableOpacity` components wrapping text (e.g., "Don't have an account? Sign Up") are often treated as generic buttons or not announced as actionable links by screen readers. Splitting text into multiple `Text` children can cause fragmented announcements.
+**Action:** Use `accessibilityRole="link"` for navigation actions and provide a combined `accessibilityLabel` for multi-part text links. Add `hitSlop` to small text-based touch targets.
