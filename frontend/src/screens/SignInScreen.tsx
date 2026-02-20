@@ -110,7 +110,9 @@ export default function SignInScreen() {
               className="self-end mb-6"
               onPress={() => Alert.alert('Forgot Password', 'Not implemented')}
               accessibilityRole="button"
+              accessibilityLabel="Forgot Password"
               accessibilityHint="Navigates to password recovery"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text className="text-blue-500 font-semibold">Forgot Password?</Text>
             </TouchableOpacity>
@@ -131,8 +133,11 @@ export default function SignInScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-row justify-center"
+              className="flex-row justify-center p-2"
               onPress={() => navigation.navigate('SignUp')}
+              accessibilityRole="link"
+              accessibilityLabel="Don't have an account? Sign Up"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text className="text-slate-400">Don't have an account? </Text>
               <Text className="text-blue-500 font-bold">Sign Up</Text>

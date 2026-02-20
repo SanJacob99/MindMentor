@@ -122,8 +122,11 @@ export default function SignUpScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-row justify-center"
+              className="flex-row justify-center p-2"
               onPress={() => navigation.navigate('SignIn')}
+              accessibilityRole="link"
+              accessibilityLabel="Have an account? Login"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text className="text-slate-400">Have an account? </Text>
               <Text className="text-blue-500 font-bold">Login</Text>
