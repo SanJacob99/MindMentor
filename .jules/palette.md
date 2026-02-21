@@ -24,3 +24,7 @@
 ## 2026-06-25 - Accessible Links in React Native
 **Learning:** `TouchableOpacity` components wrapping text (e.g., "Don't have an account? Sign Up") are often treated as generic buttons or not announced as actionable links by screen readers. Splitting text into multiple `Text` children can cause fragmented announcements.
 **Action:** Use `accessibilityRole="link"` for navigation actions and provide a combined `accessibilityLabel` for multi-part text links. Add `hitSlop` to small text-based touch targets.
+
+## 2027-01-14 - Android Back Button Handling for Overlays
+**Learning:** Custom overlays and sidebars implemented with absolute positioning do not automatically intercept the Android hardware back button. Users expect the back button to close the overlay, but default behavior often exits the app or navigates back in the stack, causing frustration.
+**Action:** Always implement `BackHandler` listeners for custom overlay/drawer components on Android to intercept `hardwareBackPress` and close the overlay.

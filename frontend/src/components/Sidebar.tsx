@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Dimensions, Pressable, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, BackHandler, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -26,6 +26,19 @@ export default function Sidebar() {
       easing: Easing.bezier(0.25, 0.1, 0.25, 1),
     });
   }, [isOpen]);
+
+  // Handle hardware back button on Android
+  useEffect(() => {
+    if (Platform.OS !== 'android' || !isOpen) return;
+
+    const onBackPress = () => {
+      close();
+      return true; // prevent default behavior
+    };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => subscription.remove();
+  }, [isOpen, close]);
 
   const sidebarStyle = useAnimatedStyle(() => ({
     transform: [
