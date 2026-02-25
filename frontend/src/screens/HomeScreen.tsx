@@ -450,7 +450,11 @@ export default function HomeScreen() {
         onRequestClose={() => setShowAddTagModal(false)}
       >
         <View className="flex-1 bg-black/50 justify-center items-center p-5">
-          <View className="bg-slate-900 rounded-2xl p-5 w-full max-w-sm border border-slate-700">
+          <View
+            className="bg-slate-900 rounded-2xl p-5 w-full max-w-sm border border-slate-700"
+            accessibilityViewIsModal={true}
+            onAccessibilityEscape={() => setShowAddTagModal(false)}
+          >
             <Text className="text-white text-lg font-bold mb-2">Add Context Tag</Text>
             <Text className="text-slate-400 mb-4">Enter a name for your custom tag:</Text>
             <TextInput
@@ -461,11 +465,16 @@ export default function HomeScreen() {
               onChangeText={setNewTagName}
               autoFocus
               maxLength={30}
+              accessibilityLabel="Tag name"
+              accessibilityHint="Enter the name for your new context tag"
             />
             <View className="flex-row gap-3">
               <TouchableOpacity
                 onPress={() => setShowAddTagModal(false)}
                 className="flex-1 py-3 rounded-xl bg-slate-800 items-center"
+                accessibilityRole="button"
+                accessibilityLabel="Cancel"
+                accessibilityHint="Closes the tag creation modal"
               >
                 <Text className="text-slate-400 font-medium">Cancel</Text>
               </TouchableOpacity>
@@ -473,6 +482,10 @@ export default function HomeScreen() {
                 onPress={handleSaveNewTag}
                 disabled={!newTagName.trim() || isAddingOption}
                 className={`flex-1 py-3 rounded-xl items-center ${newTagName.trim() ? 'bg-blue-600' : 'bg-slate-700'}`}
+                accessibilityRole="button"
+                accessibilityLabel="Add Tag"
+                accessibilityHint="Creates the new tag"
+                accessibilityState={{ disabled: !newTagName.trim() || isAddingOption }}
               >
                 {isAddingOption ? (
                   <ActivityIndicator color="#fff" />
