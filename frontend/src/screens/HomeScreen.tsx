@@ -132,9 +132,8 @@ export default function HomeScreen() {
 
   // Show first 5 options when collapsed, all when expanded
   const MAX_VISIBLE = 5;
-  const MAX_OPTIONS = 10;
   const hasMoreOptions = contextOptions.length > MAX_VISIBLE;
-  const visibleOptions = isExpanded ? contextOptions.slice(0, MAX_OPTIONS) : contextOptions.slice(0, MAX_VISIBLE);
+  const visibleOptions = isExpanded ? contextOptions : contextOptions.slice(0, MAX_VISIBLE);
 
   const handleSubmit = async () => {
     // Clear auto-save timer to prevent double-submit
@@ -187,6 +186,12 @@ export default function HomeScreen() {
     resetInactivityTimer();
   };
 
+  const onTagAdded = (rawName: string) => {
+    const formatted = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+    setTags((prev) => (prev.includes(formatted) ? prev : [...prev, formatted]));
+    setIsExpanded(true);
+  };
+
   const handleAddTag = () => {
     if (Platform.OS === 'ios') {
       Alert.prompt(
@@ -195,7 +200,9 @@ export default function HomeScreen() {
         async (name) => {
           if (name) {
             try {
-              await addContextOption(name);
+              const trimmed = name.trim();
+              await addContextOption(trimmed);
+              onTagAdded(trimmed);
             } catch (error) {
               Alert.alert('Error', error instanceof Error ? error.message : 'Failed to add tag');
             }
@@ -211,9 +218,11 @@ export default function HomeScreen() {
   };
 
   const handleSaveNewTag = async () => {
-    if (newTagName.trim()) {
+    const trimmed = newTagName.trim();
+    if (trimmed) {
       try {
-        await addContextOption(newTagName);
+        await addContextOption(trimmed);
+        onTagAdded(trimmed);
         setShowAddTagModal(false);
         setNewTagName('');
       } catch (error) {
