@@ -47,6 +47,7 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
                         className="p-2 bg-slate-800 rounded-full"
                         accessibilityRole="button"
                         accessibilityLabel="Close details"
+                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
                         <X size={20} color="#94a3b8" />
                     </TouchableOpacity>
