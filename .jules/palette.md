@@ -31,3 +31,7 @@
 ## 2025-05-18 - Segmented Controls in React Native
 **Learning:** Range pickers or segmented controls built with `TouchableOpacity` are often inaccessible. Screen readers do not know they are selectable tabs or which one is active.
 **Action:** Always add `accessibilityRole="tab"` and `accessibilityState={{ selected: boolean }}` to items acting as segmented controls.
+
+## 2025-03-01 - Hit Slops for Small Touchable Components
+**Learning:** Icon-only buttons or touchable areas that are too small can be difficult to tap, particularly on mobile. Adding `hitSlop` is crucial to ensure smooth user interactions.
+**Action:** Always add `hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}` to icon-only buttons (`TouchableOpacity` components rendering just an icon) to increase the tap target size without modifying the visual layout.
