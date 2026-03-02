@@ -162,6 +162,8 @@ export default function InsightsScreen() {
                                 <TouchableOpacity
                                     key={r}
                                     onPress={() => setRange(r)}
+                                    accessibilityRole="tab"
+                                    accessibilityState={{ selected: range === r }}
                                     style={{
                                         paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8,
                                         backgroundColor: range === r ? '#1e293b' : 'transparent',

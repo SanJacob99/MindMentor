@@ -32,7 +32,11 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-end bg-black/70">
-        <View className="bg-slate-900 rounded-t-3xl h-[85%] w-full overflow-hidden">
+        <View
+          className="bg-slate-900 rounded-t-3xl h-[85%] w-full overflow-hidden"
+          accessibilityViewIsModal={true}
+          onAccessibilityEscape={onClose}
+        >
             {/* Header / Handle */}
             <View className="items-center pt-4 pb-2">
                 <View className="w-12 h-1 bg-slate-700 rounded-full" />
@@ -47,7 +51,7 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
                         className="p-2 bg-slate-800 rounded-full"
                         accessibilityRole="button"
                         accessibilityLabel="Close details"
-                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                     >
                         <X size={20} color="#94a3b8" />
                     </TouchableOpacity>
