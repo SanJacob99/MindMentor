@@ -56,6 +56,7 @@ export default function Header({ title = 'Today', showDate = true, onMenuPress }
                 accessibilityRole="button"
                 accessibilityLabel={`Signed in as ${user?.email || 'User'}. Double tap to open profile settings.`}
                 accessibilityHint="Opens the settings menu"
+                hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
             >
                 <Text className="text-blue-300 font-bold">{getInitials()}</Text>
             </TouchableOpacity>
