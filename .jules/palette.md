@@ -28,3 +28,7 @@
 ## 2026-10-27 - Auto-Select & List Expansion
 **Learning:** When users add a new item to a sorted list (e.g., tags sorted by frequency), the new item often appears at the end, outside the initial visible viewport. This leaves users confused about whether their action succeeded.
 **Action:** Always auto-select the newly created item and expand the list or scroll to the item to provide immediate visual confirmation of success.
+
+## 2025-03-01 - Hit Slops for Small Touchable Components
+**Learning:** Icon-only buttons or touchable areas that are too small can be difficult to tap, particularly on mobile. Adding `hitSlop` is crucial to ensure smooth user interactions.
+**Action:** Always add `hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}` to icon-only buttons (`TouchableOpacity` components rendering just an icon) to increase the tap target size without modifying the visual layout.

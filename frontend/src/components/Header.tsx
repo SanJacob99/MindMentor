@@ -38,6 +38,7 @@ export default function Header({ title = 'Today', showDate = true, onMenuPress }
                 onPress={handleMenuPress}
                 accessibilityRole="button"
                 accessibilityLabel="Open menu"
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             >
                 <Menu color="#fff" size={24} />
             </TouchableOpacity>

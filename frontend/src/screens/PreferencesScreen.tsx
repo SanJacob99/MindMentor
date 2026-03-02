@@ -80,6 +80,7 @@ export default function PreferencesScreen() {
           className="p-1"
           accessibilityRole="button"
           accessibilityLabel="Close settings"
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
           <X size={22} color="#94a3b8" />
         </TouchableOpacity>
