@@ -42,8 +42,14 @@ export default function InsightsScreen() {
 
     if (!data || !data.dataset) {
         return (
-            <View className="flex-1 bg-slate-950 justify-center items-center" style={{ backgroundColor: '#020617', minHeight: '100%' }}>
-                <Text className="text-white">No data available</Text>
+            <View className="flex-1 bg-slate-950 justify-center items-center px-8" style={{ backgroundColor: '#020617', minHeight: '100%' }}>
+                <View className="bg-slate-900 p-6 rounded-full mb-6 border border-slate-800 items-center justify-center">
+                    <Sparkles size={40} color="#3b82f6" />
+                </View>
+                <Text className="text-white text-xl font-bold mb-2">No insights yet</Text>
+                <Text className="text-slate-400 text-center leading-6">
+                    Keep checking in! Your patterns and insights will appear here once you've logged a few more entries.
+                </Text>
             </View>
         );
     }
