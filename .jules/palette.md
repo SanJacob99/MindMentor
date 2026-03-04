@@ -35,3 +35,7 @@
 ## 2025-03-01 - Hit Slops for Small Touchable Components
 **Learning:** Icon-only buttons or touchable areas that are too small can be difficult to tap, particularly on mobile. Adding `hitSlop` is crucial to ensure smooth user interactions.
 **Action:** Always add `hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}` to icon-only buttons (`TouchableOpacity` components rendering just an icon) to increase the tap target size without modifying the visual layout.
+
+## 2027-10-24 - Switch Accessibility & Touch Targets
+**Learning:** The native `Switch` component has a small hit target, making it difficult to toggle reliably. Furthermore, placing text adjacent to a standalone `Switch` forces screen reader users to navigate between the description and the interactive element separately, losing context.
+**Action:** Always wrap the `Switch` and its accompanying text within a single `TouchableOpacity` (with `accessibilityRole="switch"`, `accessibilityState={{ checked: value }}`, and `activeOpacity={0.7}`). Wrap the internal `Switch` in a `<View pointerEvents="none">` so the parent touchable captures the interaction, increasing the effective hit area and combining context for screen readers.
