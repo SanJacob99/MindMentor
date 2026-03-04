@@ -25,6 +25,9 @@
 **Learning:** `TouchableOpacity` components wrapping text (e.g., "Don't have an account? Sign Up") are often treated as generic buttons or not announced as actionable links by screen readers. Splitting text into multiple `Text` children can cause fragmented announcements.
 **Action:** Use `accessibilityRole="link"` for navigation actions and provide a combined `accessibilityLabel` for multi-part text links. Add `hitSlop` to small text-based touch targets.
 
+## 2027-01-14 - Android Back Button Handling for Overlays
+**Learning:** Custom overlays and sidebars implemented with absolute positioning do not automatically intercept the Android hardware back button. Users expect the back button to close the overlay, but default behavior often exits the app or navigates back in the stack, causing frustration.
+**Action:** Always implement `BackHandler` listeners for custom overlay/drawer components on Android to intercept `hardwareBackPress` and close the overlay.
 ## 2026-10-27 - Auto-Select & List Expansion
 **Learning:** When users add a new item to a sorted list (e.g., tags sorted by frequency), the new item often appears at the end, outside the initial visible viewport. This leaves users confused about whether their action succeeded.
 **Action:** Always auto-select the newly created item and expand the list or scroll to the item to provide immediate visual confirmation of success.
