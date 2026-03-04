@@ -43,10 +43,15 @@ export default function StreakBadge({ currentStreaks, bestStreaks, volatility }:
             const config = STREAK_CONFIG[streak.type] || { icon: Flame, color: '#94a3b8', label: streak.type };
             const Icon = config.icon;
             return (
-              <View key={i} style={{
-                flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8,
-                paddingHorizontal: 12, backgroundColor: '#1e293b', borderRadius: 10, marginBottom: 6,
-              }}>
+              <View
+                key={i}
+                style={{
+                  flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8,
+                  paddingHorizontal: 12, backgroundColor: '#1e293b', borderRadius: 10, marginBottom: 6,
+                }}
+                accessible={true}
+                accessibilityLabel={`${streak.length}-day ${config.label} streak`}
+              >
                 <Icon size={18} color={config.color} />
                 <Text style={{ color: 'white', fontWeight: '600', fontSize: 14 }}>
                   {streak.length}-day {config.label} streak
@@ -68,10 +73,15 @@ export default function StreakBadge({ currentStreaks, bestStreaks, volatility }:
               const config = STREAK_CONFIG[streak.type] || { icon: Flame, color: '#94a3b8', label: streak.type };
               const Icon = config.icon;
               return (
-                <View key={i} style={{
-                  flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6,
-                  paddingHorizontal: 12, marginBottom: 4,
-                }}>
+                <View
+                  key={i}
+                  style={{
+                    flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6,
+                    paddingHorizontal: 12, marginBottom: 4,
+                  }}
+                  accessible={true}
+                  accessibilityLabel={`Personal best: ${streak.length}-day ${config.label} streak from ${streak.startDate} to ${streak.endDate}`}
+                >
                   <Icon size={14} color={config.color} />
                   <Text style={{ color: '#cbd5e1', fontSize: 13 }}>
                     {streak.length} days ({streak.startDate} to {streak.endDate})
@@ -87,7 +97,12 @@ export default function StreakBadge({ currentStreaks, bestStreaks, volatility }:
         <Text style={{ color: '#94a3b8', fontSize: 11, textTransform: 'uppercase', marginBottom: 6 }}>Stability</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
           {([['Mood', volatility.mood], ['Stress', volatility.stress], ['Energy', volatility.energy]] as [string, number][]).map(([label, val]) => (
-            <View key={label} style={{ alignItems: 'center' }}>
+            <View
+              key={label}
+              style={{ alignItems: 'center' }}
+              accessible={true}
+              accessibilityLabel={`${label} stability score: ${val.toFixed(1)}`}
+            >
               <Text style={{ color: val > 2.5 ? '#f97316' : val < 1.0 ? '#22c55e' : '#94a3b8', fontWeight: '600', fontSize: 16 }}>
                 {val.toFixed(1)}
               </Text>

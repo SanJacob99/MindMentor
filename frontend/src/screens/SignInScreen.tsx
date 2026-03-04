@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import MindMentorLogo from '../../assets/MindMentorLogo.svg';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, X } from 'lucide-react-native';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
 
@@ -75,6 +75,16 @@ export default function SignInScreen() {
                 onSubmitEditing={() => passwordRef.current?.focus()}
                 blurOnSubmit={false}
               />
+              {email.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => setEmail('')}
+                  accessibilityRole="button"
+                  accessibilityLabel="Clear email"
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <X color="#94a3b8" size={20} />
+                </TouchableOpacity>
+              )}
             </View>
 
             <Text className="text-slate-300 font-bold mb-2">Password</Text>

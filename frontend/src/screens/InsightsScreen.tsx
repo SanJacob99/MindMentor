@@ -136,6 +136,7 @@ export default function InsightsScreen() {
                                 onPress={() => setActiveSection(section.key)}
                                 accessibilityRole="tab"
                                 accessibilityState={{ selected: activeSection === section.key }}
+                                accessibilityLabel={`${section.label}${Platform.OS === 'web' && activeSection === section.key ? ', selected' : ''}`}
                                 style={{
                                     paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20,
                                     backgroundColor: activeSection === section.key ? '#3b82f6' : 'transparent',
@@ -161,6 +162,8 @@ export default function InsightsScreen() {
                                 <TouchableOpacity
                                     key={r}
                                     onPress={() => setRange(r)}
+                                    accessibilityRole="tab"
+                                    accessibilityState={{ selected: range === r }}
                                     style={{
                                         paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8,
                                         backgroundColor: range === r ? '#1e293b' : 'transparent',
@@ -427,7 +430,7 @@ function TabButton({ label, active, onPress, color }: { label: string, active: b
             onPress={onPress}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
-            accessibilityLabel={`${label} chart${active ? ', selected' : ''}`}
+            accessibilityLabel={`${label} chart${Platform.OS === 'web' && active ? ', selected' : ''}`}
             style={{
                 flexDirection: 'row',
                 alignItems: 'center',
