@@ -219,19 +219,28 @@ export default function OnboardingScreen() {
                 <View className="w-full">
                   <Text className="text-slate-400 font-semibold mb-4 text-sm">Gentle Reminder</Text>
                   <View className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-                    <View className="p-5 flex-row justify-between items-center">
-                      <View>
+                    <TouchableOpacity
+                      onPress={() => setCheckInEnabled(!checkInEnabled)}
+                      accessibilityRole="switch"
+                      accessibilityState={{ checked: checkInEnabled }}
+                      accessibilityLabel="Enable daily check-in"
+                      accessibilityHint="Toggles the daily reminder for logging your mood"
+                      className="p-5 flex-row justify-between items-center"
+                      activeOpacity={0.7}
+                    >
+                      <View className="flex-1 pr-4">
                         <Text className="text-white text-base font-bold">Daily Check-in</Text>
                         <Text className="text-slate-400 text-xs">Build a consistent habit</Text>
                       </View>
-                      <Switch
-                        trackColor={{ false: "#334155", true: "#3B82F6" }}
-                        thumbColor={checkInEnabled ? "#ffffff" : "#f4f3f4"}
-                        ios_backgroundColor="#334155"
-                        onValueChange={setCheckInEnabled}
-                        value={checkInEnabled}
-                      />
-                    </View>
+                      <View pointerEvents="none">
+                        <Switch
+                          trackColor={{ false: "#334155", true: "#3B82F6" }}
+                          thumbColor={checkInEnabled ? "#ffffff" : "#f4f3f4"}
+                          ios_backgroundColor="#334155"
+                          value={checkInEnabled}
+                        />
+                      </View>
+                    </TouchableOpacity>
                     {checkInEnabled && (
                       <View className="bg-slate-800/50" style={{ borderTopWidth: 1, borderTopColor: "rgba(51, 65, 85, 0.5)" }}>
                         <View className="w-full items-center justify-center py-4">

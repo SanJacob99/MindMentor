@@ -25,6 +25,9 @@
 **Learning:** `TouchableOpacity` components wrapping text (e.g., "Don't have an account? Sign Up") are often treated as generic buttons or not announced as actionable links by screen readers. Splitting text into multiple `Text` children can cause fragmented announcements.
 **Action:** Use `accessibilityRole="link"` for navigation actions and provide a combined `accessibilityLabel` for multi-part text links. Add `hitSlop` to small text-based touch targets.
 
+## 2027-01-14 - Android Back Button Handling for Overlays
+**Learning:** Custom overlays and sidebars implemented with absolute positioning do not automatically intercept the Android hardware back button. Users expect the back button to close the overlay, but default behavior often exits the app or navigates back in the stack, causing frustration.
+**Action:** Always implement `BackHandler` listeners for custom overlay/drawer components on Android to intercept `hardwareBackPress` and close the overlay.
 ## 2026-10-27 - Auto-Select & List Expansion
 **Learning:** When users add a new item to a sorted list (e.g., tags sorted by frequency), the new item often appears at the end, outside the initial visible viewport. This leaves users confused about whether their action succeeded.
 **Action:** Always auto-select the newly created item and expand the list or scroll to the item to provide immediate visual confirmation of success.
@@ -39,3 +42,6 @@
 ## 2026-11-20 - Empty State Placeholders
 **Learning:** Using plain, unstyled text for empty states (e.g., "No data available") creates a jarring user experience, particularly on screens that are otherwise visually rich or analytical.
 **Action:** Always replace unstyled empty states with a visually consistent placeholder. Use existing design tokens, incorporate a relevant icon (e.g., `Sparkles` or `PenLine`), provide a clear title, and offer encouraging or explanatory guidance text to set user expectations.
+## 2027-10-24 - Switch Accessibility & Touch Targets
+**Learning:** The native `Switch` component has a small hit target, making it difficult to toggle reliably. Furthermore, placing text adjacent to a standalone `Switch` forces screen reader users to navigate between the description and the interactive element separately, losing context.
+**Action:** Always wrap the `Switch` and its accompanying text within a single `TouchableOpacity` (with `accessibilityRole="switch"`, `accessibilityState={{ checked: value }}`, and `activeOpacity={0.7}`). Wrap the internal `Switch` in a `<View pointerEvents="none">` so the parent touchable captures the interaction, increasing the effective hit area and combining context for screen readers.
