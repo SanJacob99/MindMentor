@@ -76,7 +76,7 @@ export default function PatternCard({ hourlyBuckets, bestBucket, worstBucket, we
           onPress={() => setView('timeOfDay')}
           accessibilityRole="tab"
           accessibilityState={{ selected: view === 'timeOfDay' }}
-          accessibilityLabel={`Time of Day${Platform.OS === 'web' && view === 'timeOfDay' ? ', selected' : ''}`}
+          accessibilityLabel="Time of Day"
           style={{
             paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8,
             backgroundColor: view === 'timeOfDay' ? '#1e293b' : 'transparent',
@@ -89,7 +89,7 @@ export default function PatternCard({ hourlyBuckets, bestBucket, worstBucket, we
           onPress={() => setView('weekday')}
           accessibilityRole="tab"
           accessibilityState={{ selected: view === 'weekday' }}
-          accessibilityLabel={`Weekday${Platform.OS === 'web' && view === 'weekday' ? ', selected' : ''}`}
+          accessibilityLabel="Weekday"
           style={{
             paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8,
             backgroundColor: view === 'weekday' ? '#1e293b' : 'transparent',
@@ -108,7 +108,7 @@ export default function PatternCard({ hourlyBuckets, bestBucket, worstBucket, we
             onPress={() => setMetric(m)}
             accessibilityRole="tab"
             accessibilityState={{ selected: metric === m }}
-            accessibilityLabel={`${m}${Platform.OS === 'web' && metric === m ? ', selected' : ''}`}
+            accessibilityLabel={m}
             style={{
               flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 4,
               borderRadius: 12, backgroundColor: metric === m ? '#1e293b' : 'transparent',
