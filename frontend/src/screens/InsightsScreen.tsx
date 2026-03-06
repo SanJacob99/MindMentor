@@ -136,7 +136,7 @@ export default function InsightsScreen() {
                                 onPress={() => setActiveSection(section.key)}
                                 accessibilityRole="tab"
                                 accessibilityState={{ selected: activeSection === section.key }}
-                                accessibilityLabel={`${section.label}${Platform.OS === 'web' && activeSection === section.key ? ', selected' : ''}`}
+                                accessibilityLabel={section.label}
                                 style={{
                                     paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20,
                                     backgroundColor: activeSection === section.key ? '#3b82f6' : 'transparent',
@@ -430,7 +430,7 @@ function TabButton({ label, active, onPress, color }: { label: string, active: b
             onPress={onPress}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
-            accessibilityLabel={`${label} chart${Platform.OS === 'web' && active ? ', selected' : ''}`}
+            accessibilityLabel={`${label} chart`}
             style={{
                 flexDirection: 'row',
                 alignItems: 'center',

@@ -42,3 +42,7 @@
 ## 2027-10-24 - Switch Accessibility & Touch Targets
 **Learning:** The native `Switch` component has a small hit target, making it difficult to toggle reliably. Furthermore, placing text adjacent to a standalone `Switch` forces screen reader users to navigate between the description and the interactive element separately, losing context.
 **Action:** Always wrap the `Switch` and its accompanying text within a single `TouchableOpacity` (with `accessibilityRole="switch"`, `accessibilityState={{ checked: value }}`, and `activeOpacity={0.7}`). Wrap the internal `Switch` in a `<View pointerEvents="none">` so the parent touchable captures the interaction, increasing the effective hit area and combining context for screen readers.
+
+## 2024-10-25 - Avoid `, selected` anti-pattern for a11y states
+**Learning:** React Native custom tab components or segmented controls using `TouchableOpacity` must explicitly define `accessibilityRole="tab"` and `accessibilityState={{ selected: boolean }}` to be properly announced by screen readers. Appending `, selected` text dynamically to the `accessibilityLabel` itself is an anti-pattern.
+**Action:** When implementing tabs or toggleable active elements, ensure semantic states (like `accessibilityState`) are used rather than modifying the readable label text to communicate UI state.
