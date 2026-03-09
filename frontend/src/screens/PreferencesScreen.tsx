@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
 import { User, Bell, Clock, Moon, Info, LogOut, ChevronRight, X } from 'lucide-react-native';
 import { useAuthStore } from '../store/authStore';
 import { useUser } from '../hooks/useUser';
@@ -66,8 +66,29 @@ export default function PreferencesScreen() {
   };
 
   const handleLogout = () => {
-    close();
-    logout();
+    if (Platform.OS === 'web') {
+      if (window.confirm('Are you sure you want to log out?')) {
+        close();
+        logout();
+      }
+    } else {
+      Alert.alert(
+        'Log Out',
+        'Are you sure you want to log out?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Log Out',
+            style: 'destructive',
+            onPress: () => {
+              close();
+              logout();
+            },
+          },
+        ],
+        { cancelable: true }
+      );
+    }
   };
 
   return (
