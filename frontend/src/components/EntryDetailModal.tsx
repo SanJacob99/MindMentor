@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Modal, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { X, Lightbulb } from 'lucide-react-native';
 import { Entry } from '../types/entry';
@@ -23,6 +23,14 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
       if (val >= 4) return 'Medium';
       return 'Low';
   }
+
+  const renderedTags = useMemo(() => {
+    return entry.tags.map((tag, index) => (
+      <View key={index} className="bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+        <Text className="text-blue-400 text-xs font-medium">{tag.startsWith('#') ? tag : `#${tag}`}</Text>
+      </View>
+    ));
+  }, [entry.tags]);
 
   return (
     <Modal
@@ -65,13 +73,11 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
                     </View>
 
                     {/* Tags */}
-                    <View className="flex-row flex-wrap gap-2 mb-8">
-                        {entry.tags.map((tag, index) => (
-                            <View key={index} className="bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                                <Text className="text-blue-400 text-xs font-medium">{tag.startsWith('#') ? tag : `#${tag}`}</Text>
-                            </View>
-                        ))}
-                    </View>
+                    {entry.tags.length > 0 && (
+                      <View className="flex-row flex-wrap gap-2 mb-8">
+                          {renderedTags}
+                      </View>
+                    )}
 
                     {/* Emotional State */}
                     <View className="bg-slate-950/50 rounded-2xl p-5 mb-8 border border-slate-800">
