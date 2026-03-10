@@ -506,8 +506,9 @@ export function computeTagCombinations(
     .map(([tag]) => tag);
 
   const pairMetrics = new Map<string, number[]>();
+  const topTagsSet = new Set(topTags);
   for (const e of entries) {
-    const entryTopTags = e.tags.filter((t) => topTags.includes(t));
+    const entryTopTags = e.tags.filter((t) => topTagsSet.has(t));
     for (let i = 0; i < entryTopTags.length; i++) {
       for (let j = i + 1; j < entryTopTags.length; j++) {
         const key = [entryTopTags[i], entryTopTags[j]].sort().join('|||');
