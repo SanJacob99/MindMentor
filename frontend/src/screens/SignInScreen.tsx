@@ -70,6 +70,10 @@ export default function SignInScreen() {
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
+                keyboardType="email-address"
+                autoComplete="email"
+                textContentType="emailAddress"
+                autoCorrect={false}
                 accessibilityLabel="Email Address"
                 returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()}
@@ -98,6 +102,9 @@ export default function SignInScreen() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
+                autoComplete="password"
+                textContentType="password"
+                autoCorrect={false}
                 accessibilityLabel="Password"
                 returnKeyType="go"
                 onSubmitEditing={handleLogin}

@@ -49,3 +49,7 @@
 ## 2024-10-25 - Avoid `, selected` anti-pattern for a11y states
 **Learning:** React Native custom tab components or segmented controls using `TouchableOpacity` must explicitly define `accessibilityRole="tab"` and `accessibilityState={{ selected: boolean }}` to be properly announced by screen readers. Appending `, selected` text dynamically to the `accessibilityLabel` itself is an anti-pattern.
 **Action:** When implementing tabs or toggleable active elements, ensure semantic states (like `accessibilityState`) are used rather than modifying the readable label text to communicate UI state.
+
+## 2025-03-12 - Explicit Keyboard Types and Autofill in Authentication
+**Learning:** React Native `TextInput` components do not automatically assume optimized keyboard layouts or integrate with device password managers simply based on variable names like "email" or "password". This requires manual interaction and typing, causing unnecessary friction during sign-in/up flows.
+**Action:** Always provide explicit properties like `keyboardType="email-address"`, `autoComplete="email"/"password"`, `textContentType="emailAddress"/"password"`, and `autoCorrect={false}` to authentication inputs to trigger platform-specific optimizations and password manager prompts.
