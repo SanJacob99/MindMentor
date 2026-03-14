@@ -49,3 +49,7 @@
 ## 2024-10-25 - Avoid `, selected` anti-pattern for a11y states
 **Learning:** React Native custom tab components or segmented controls using `TouchableOpacity` must explicitly define `accessibilityRole="tab"` and `accessibilityState={{ selected: boolean }}` to be properly announced by screen readers. Appending `, selected` text dynamically to the `accessibilityLabel` itself is an anti-pattern.
 **Action:** When implementing tabs or toggleable active elements, ensure semantic states (like `accessibilityState`) are used rather than modifying the readable label text to communicate UI state.
+
+## 2025-05-22 - Confirmation Dialogs for Destructive Actions
+**Learning:** Destructive actions like logging out or deleting data without a confirmation step can lead to accidental user actions and frustration.
+**Action:** Always implement a confirmation dialog before executing destructive actions. Use `Alert.alert` for native platforms and `window.confirm` for web environments to provide a native-feeling confirmation step.
