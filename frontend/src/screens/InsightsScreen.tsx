@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Dimensions, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '../navigation/RootNavigator';
 import { useInsightsSummary, usePatterns, useTagAnalysis, useTextAnalysis } from '../hooks/useInsights';
 import { Sparkles } from 'lucide-react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
@@ -25,6 +28,7 @@ const SCATTER_DATA = [
 ];
 
 export default function InsightsScreen() {
+    const navigation = useNavigation<BottomTabNavigationProp<TabParamList>>();
     const [activeSection, setActiveSection] = useState<SectionType>('overview');
     const [activeTab, setActiveTab] = useState<TabType>('mood');
     const [range, setRange] = useState<'30d' | '90d'>('30d');
@@ -47,9 +51,17 @@ export default function InsightsScreen() {
                     <Sparkles size={40} color="#3b82f6" />
                 </View>
                 <Text className="text-white text-xl font-bold mb-2">No insights yet</Text>
-                <Text className="text-slate-400 text-center leading-6">
+                <Text className="text-slate-400 text-center leading-6 mb-8">
                     Keep checking in! Your patterns and insights will appear here once you've logged a few more entries.
                 </Text>
+                <TouchableOpacity
+                    className="bg-blue-600 px-8 py-4 rounded-xl active:bg-blue-700"
+                    onPress={() => navigation.navigate('Home')}
+                    accessibilityRole="button"
+                    accessibilityLabel="Check-in Now"
+                >
+                    <Text className="text-white font-bold text-lg">Check-in Now</Text>
+                </TouchableOpacity>
             </View>
         );
     }
