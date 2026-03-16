@@ -84,34 +84,45 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
                         <Text className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-6">Emotional State</Text>
 
                         {/* Mood */}
-                        <View className="mb-4">
+                        <View
+                            className="mb-4"
+                            accessible={true}
+                            accessibilityLabel={`Mood: ${getMoodLabel(entry.mood)}`}
+                        >
                             <View className="flex-row justify-between mb-2">
                                 <Text className="text-white text-sm">Mood</Text>
                                 <Text className="text-blue-400 text-sm font-bold">{getMoodLabel(entry.mood)}</Text>
                             </View>
-                            <View className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <View className="h-2 bg-slate-800 rounded-full overflow-hidden" importantForAccessibility="no-hide-descendants" accessibilityElementsHidden={true}>
                                 <View style={{ width: `${entry.mood * 10}%` }} className="h-full bg-blue-500 rounded-full" />
                             </View>
                         </View>
 
                         {/* Stress */}
-                        <View className="mb-4">
+                        <View
+                            className="mb-4"
+                            accessible={true}
+                            accessibilityLabel={`Stress: ${getMoodLabel(entry.stress)}`}
+                        >
                             <View className="flex-row justify-between mb-2">
                                 <Text className="text-white text-sm">Stress</Text>
                                 <Text className="text-orange-400 text-sm font-bold">{getMoodLabel(entry.stress)}</Text>
                             </View>
-                            <View className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <View className="h-2 bg-slate-800 rounded-full overflow-hidden" importantForAccessibility="no-hide-descendants" accessibilityElementsHidden={true}>
                                 <View style={{ width: `${entry.stress * 10}%` }} className="h-full bg-orange-500 rounded-full" />
                             </View>
                         </View>
 
                         {/* Energy */}
-                        <View>
+                        <View
+                            accessible={true}
+                            accessibilityLabel={`Energy: ${getMoodLabel(entry.energy)}`}
+                        >
                             <View className="flex-row justify-between mb-2">
                                 <Text className="text-white text-sm">Energy</Text>
                                 <Text className="text-teal-400 text-sm font-bold">{getMoodLabel(entry.energy)}</Text>
                             </View>
-                            <View className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <View className="h-2 bg-slate-800 rounded-full overflow-hidden" importantForAccessibility="no-hide-descendants" accessibilityElementsHidden={true}>
                                 <View style={{ width: `${entry.energy * 10}%` }} className="h-full bg-teal-500 rounded-full" />
                             </View>
                         </View>
@@ -126,9 +137,12 @@ export default function EntryDetailModal({ visible, entry, onClose }: EntryDetai
                     </View>
 
                     {/* Suggestion Card */}
-                    <View className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700 relative overflow-hidden">
+                    <View
+                        className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700 relative overflow-hidden"
+                        accessible={true}
+                    >
                         {/* Background Icon Effect */}
-                        <View className="absolute -right-4 -bottom-4 opacity-10">
+                        <View className="absolute -right-4 -bottom-4 opacity-10" importantForAccessibility="no-hide-descendants" accessibilityElementsHidden={true}>
                             <Lightbulb size={120} color="#3b82f6" />
                         </View>
 
