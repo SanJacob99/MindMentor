@@ -53,3 +53,10 @@
 ## 2026-03-03 - Keyboard Types and Autofill in Forms
 **Learning:** Default text inputs in mobile forms often present a standard keyboard, which requires extra taps to enter common characters like "@" in email fields. Furthermore, not declaring input semantics prevents native password managers and system auto-fill from offering saved credentials, heavily degrading the user experience during sign in and sign up.
 **Action:** Always provide explicit semantic properties for text inputs: use `keyboardType="email-address"`, `autoComplete="email"`, `textContentType="emailAddress"`, and `autoCorrect={false}` for email fields. Use `textContentType="password"` or `textContentType="newPassword"` alongside `secureTextEntry` for password fields.
+## 2023-10-27 - Destructive Action Confirmation
+**Learning:** Destructive actions like logging out are often implemented without a confirmation step, leading to accidental clicks and user frustration. When building for multi-platform (React Native + Web), a single approach doesn't work.
+**Action:** Always add a confirmation dialog for destructive actions. Use `Alert.alert` for native platforms and fallback to `window.confirm` via a `Platform.OS === 'web'` check to ensure a native feel across all environments.
+
+## 2024-03-16 - Empty State Call-to-Actions
+**Learning:** Even well-designed empty states with icons and text can feel like a dead end if they don't provide a way out. Users landing on an empty 'Insights' screen need a quick way to generate data.
+**Action:** Always include a primary Call-to-Action (CTA) button in empty states that navigates the user directly to the screen where they can perform the action needed to populate the data.

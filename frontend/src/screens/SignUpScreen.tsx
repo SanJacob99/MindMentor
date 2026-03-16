@@ -78,6 +78,10 @@ export default function SignUpScreen() {
                 returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()}
                 blurOnSubmit={false}
+                keyboardType="email-address"
+                autoComplete="email"
+                textContentType="emailAddress"
+                autoCorrect={false}
               />
               {email.length > 0 && (
                 <TouchableOpacity
@@ -107,6 +111,10 @@ export default function SignUpScreen() {
                 accessibilityLabel="Password"
                 returnKeyType="go"
                 onSubmitEditing={handleSignUp}
+                autoCapitalize="none"
+                autoComplete="password"
+                textContentType="newPassword"
+                autoCorrect={false}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
