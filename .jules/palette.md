@@ -60,3 +60,7 @@
 ## 2024-03-16 - Empty State Call-to-Actions
 **Learning:** Even well-designed empty states with icons and text can feel like a dead end if they don't provide a way out. Users landing on an empty 'Insights' screen need a quick way to generate data.
 **Action:** Always include a primary Call-to-Action (CTA) button in empty states that navigates the user directly to the screen where they can perform the action needed to populate the data.
+
+## 2025-05-18 - Clear Buttons in Text Inputs
+**Learning:** Lengthy text inputs (like optional notes or journal entries) can be cumbersome to clear manually on mobile devices, especially when the text overflows the visible area. While a clear button is standard on small inputs like email, it's often overlooked on multiline inputs.
+**Action:** Always conditionally render a clear button (e.g., an 'X' icon) inside the input container when `text.length > 0`. Ensure it is wrapped in a `TouchableOpacity` with a proper `hitSlop`, `accessibilityRole="button"`, and `accessibilityLabel="Clear note"`.

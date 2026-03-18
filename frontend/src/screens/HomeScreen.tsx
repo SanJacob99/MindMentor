@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Platform, A
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, Circle, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
-import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal, Plus, ChevronDown, ChevronUp, Check } from 'lucide-react-native';
+import { Menu, User, Brain, Smile, Coffee, Zap, PenLine, TrendingUp, ChevronRight, SlidersHorizontal, Plus, ChevronDown, ChevronUp, Check, X } from 'lucide-react-native';
 import { api } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { useNavigation } from '@react-navigation/native';
@@ -350,6 +350,17 @@ export default function HomeScreen() {
                     }, 300);
                   }}
                 />
+                {text.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => handleTextChange('')}
+                    accessibilityRole="button"
+                    accessibilityLabel="Clear note"
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    className="ml-2"
+                  >
+                    <X color="#94a3b8" size={20} />
+                  </TouchableOpacity>
+                )}
               </View>
 
               <TouchableOpacity
