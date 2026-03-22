@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { Smile } from 'lucide-react-native';
 
 interface EmotionData {
   emotion: string;
@@ -33,11 +34,16 @@ const EMOTION_LABELS: Record<string, string> = {
 export default function EmotionBreakdown({ breakdown, primary }: Props) {
   if (breakdown.length === 0) {
     return (
-      <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 20, borderWidth: 1, borderColor: '#1e293b' }}>
-        <Text style={{ color: 'white', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>
-          Emotions
+      <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b', alignItems: 'center' }}>
+        <View style={{ backgroundColor: '#1e293b', padding: 12, borderRadius: 9999, marginBottom: 12 }}>
+          <Smile size={24} color="#3b82f6" />
+        </View>
+        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>
+          No Emotions Yet
         </Text>
-        <Text style={{ color: '#64748b', fontSize: 14 }}>Not enough journal entries yet.</Text>
+        <Text style={{ color: '#64748b', fontSize: 14, textAlign: 'center' }}>
+          Add notes to your check-ins to see your emotional breakdown.
+        </Text>
       </View>
     );
   }

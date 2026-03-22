@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Dimensions, Platform } from 'react-native';
 import Svg, { Rect, Line, Text as SvgText } from 'react-native-svg';
+import { Tag } from 'lucide-react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -29,11 +30,16 @@ export default function TagImpactChart({ tagAnalysis }: Props) {
 
   if (sorted.length === 0) {
     return (
-      <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 20, borderWidth: 1, borderColor: '#1e293b' }}>
-        <Text style={{ color: 'white', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>
-          Tag Impact
+      <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b', alignItems: 'center' }}>
+        <View style={{ backgroundColor: '#1e293b', padding: 12, borderRadius: 9999, marginBottom: 12 }}>
+          <Tag size={24} color="#3b82f6" />
+        </View>
+        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>
+          No Tag Data Yet
         </Text>
-        <Text style={{ color: '#64748b', fontSize: 14 }}>Not enough tagged entries yet.</Text>
+        <Text style={{ color: '#64748b', fontSize: 14, textAlign: 'center' }}>
+          Add tags to your check-ins to see how they impact your mood.
+        </Text>
       </View>
     );
   }
