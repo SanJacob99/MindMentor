@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '../navigation/RootNavigator';
 import { useInsightsSummary, usePatterns, useTagAnalysis, useTextAnalysis } from '../hooks/useInsights';
-import { Sparkles } from 'lucide-react-native';
+import { Sparkles, Activity, BookOpen } from 'lucide-react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 import Header from '../components/Header';
 import PatternCard from '../components/PatternCard';
@@ -310,8 +310,16 @@ export default function InsightsScreen() {
                     {activeSection === 'patterns' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
                             {patternsLoading ? renderSectionLoading() : patternsData?.message ? (
-                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b' }}>
-                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>{patternsData.message}</Text>
+                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b', alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: '#1e293b', padding: 12, borderRadius: 9999, marginBottom: 12 }}>
+                                        <Activity size={24} color="#3b82f6" />
+                                    </View>
+                                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>
+                                        Need More Data
+                                    </Text>
+                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>
+                                        {patternsData.message}
+                                    </Text>
                                 </View>
                             ) : patternsData ? (
                                 <>
@@ -383,8 +391,16 @@ export default function InsightsScreen() {
                     {activeSection === 'journal' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
                             {textLoading ? renderSectionLoading() : textData?.message ? (
-                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b' }}>
-                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>{textData.message}</Text>
+                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b', alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: '#1e293b', padding: 12, borderRadius: 9999, marginBottom: 12 }}>
+                                        <BookOpen size={24} color="#3b82f6" />
+                                    </View>
+                                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>
+                                        Need More Entries
+                                    </Text>
+                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>
+                                        {textData.message}
+                                    </Text>
                                 </View>
                             ) : textData ? (
                                 <>
