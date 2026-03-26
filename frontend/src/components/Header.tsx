@@ -54,7 +54,7 @@ export default function Header({ title = 'Today', showDate = true, onMenuPress }
                 onPress={openSidebar}
                 className="bg-blue-900 w-10 h-10 rounded-full justify-center items-center"
                 accessibilityRole="button"
-                accessibilityLabel={`Signed in as ${user?.email || 'User'}. Double tap to open profile settings.`}
+                accessibilityLabel={`Signed in as ${user?.email || 'User'}`}
                 accessibilityHint="Opens the settings menu"
                 hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
             >
