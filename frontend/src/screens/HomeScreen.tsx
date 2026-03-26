@@ -125,6 +125,7 @@ export default function HomeScreen() {
   // Context options from hook (sorted by frequency)
   const { options: contextOptions, addContextOption, isAddingOption, isLoading: isContextLoading } = useContextOptions();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isNoteFocused, setIsNoteFocused] = useState(false);
 
   // Modal state for adding tags (Android/web fallback)
   const [showAddTagModal, setShowAddTagModal] = useState(false);
@@ -326,7 +327,7 @@ export default function HomeScreen() {
 
               <View
                 ref={noteInputRef}
-                className="bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border border-slate-800"
+                className={`bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border ${isNoteFocused ? 'border-blue-500' : 'border-slate-800'}`}
               >
                 <TextInput
                   className="flex-1 text-white"
@@ -336,7 +337,9 @@ export default function HomeScreen() {
                   onChangeText={handleTextChange}
                   multiline
                   accessibilityLabel="Optional note"
+                  onBlur={() => setIsNoteFocused(false)}
                   onFocus={() => {
+                    setIsNoteFocused(true);
                     resetInactivityTimer();
                     // Wait for keyboard to animate, then scroll input into view
                     setTimeout(() => {
