@@ -22,7 +22,7 @@ export default function HistoryCard({ entry, onPress }: HistoryCardProps) {
       activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={`Entry at ${timeString}. Mood: ${entry.mood}, Stress: ${entry.stress}, Energy: ${entry.energy}. ${entry.text || 'No description'}`}
-      accessibilityHint="Double tap to view details"
+      accessibilityHint="Opens the entry details"
     >
       <View className="flex-row justify-between items-start mb-2">
         <Text className="text-slate-400 font-bold text-sm">{timeString}</Text>

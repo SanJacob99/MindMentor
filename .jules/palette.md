@@ -64,3 +64,7 @@
 ## 2025-05-18 - Clear Buttons in Text Inputs
 **Learning:** Lengthy text inputs (like optional notes or journal entries) can be cumbersome to clear manually on mobile devices, especially when the text overflows the visible area. While a clear button is standard on small inputs like email, it's often overlooked on multiline inputs.
 **Action:** Always conditionally render a clear button (e.g., an 'X' icon) inside the input container when `text.length > 0`. Ensure it is wrapped in a `TouchableOpacity` with a proper `hitSlop`, `accessibilityRole="button"`, and `accessibilityLabel="Clear note"`.
+
+## 2024-11-13 - Avoid Instructional Hints in Accessibility Attributes
+**Learning:** Hardcoding gesture instructions (like "Double tap to...") directly into `accessibilityLabel` creates redundancy since the OS naturally appends role-based actions (e.g., "button, double tap to activate"). Additionally, hardcoding "Double tap" in `accessibilityHint` is restrictive and assumes touch input, which may not be accurate for all assistive technologies (like voice control or switch access).
+**Action:** Use `accessibilityLabel` solely to describe what the element is or its current value. Use `accessibilityHint` to concisely describe the *result* of interacting with the element (e.g., "Opens the settings menu") without dictating *how* to interact.
