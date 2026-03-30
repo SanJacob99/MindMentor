@@ -26,6 +26,7 @@ export default function HomeScreen() {
   const [energy, setEnergy] = useState(5);
   const [text, setText] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const { mutateAsync: addEntry, isPending: submitting } = useAddEntry();
   const { data: entries } = useEntries();
@@ -326,7 +327,7 @@ export default function HomeScreen() {
 
               <View
                 ref={noteInputRef}
-                className="bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border border-slate-800"
+                className={`bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border ${isInputFocused ? 'border-blue-500' : 'border-slate-800'}`}
               >
                 <TextInput
                   className="flex-1 text-white"
@@ -337,6 +338,7 @@ export default function HomeScreen() {
                   multiline
                   accessibilityLabel="Optional note"
                   onFocus={() => {
+                    setIsInputFocused(true);
                     resetInactivityTimer();
                     // Wait for keyboard to animate, then scroll input into view
                     setTimeout(() => {
@@ -349,6 +351,7 @@ export default function HomeScreen() {
                       });
                     }, 300);
                   }}
+                  onBlur={() => setIsInputFocused(false)}
                 />
                 {text.length > 0 && (
                   <TouchableOpacity
