@@ -16,6 +16,8 @@ export default function SignInScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigation<SignInScreenNavigationProp>();
   const passwordRef = useRef<TextInput>(null);
@@ -61,10 +63,12 @@ export default function SignInScreen() {
 
           <View>
             <Text className="text-slate-300 font-bold mb-2">Email Address</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-4">
+            <View className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-4 ${isEmailFocused ? 'border-blue-500' : 'border-slate-700'}`}>
               <Mail color="#94a3b8" size={20} />
               <TextInput
-                className="flex-1 text-white ml-3"
+                onFocus={() => setIsEmailFocused(true)}
+                onBlur={() => setIsEmailFocused(false)}
+                className="flex-1 text-white ml-3 outline-none"
                 placeholder="you@example.com"
                 placeholderTextColor="#94a3b8"
                 value={email}
@@ -96,11 +100,13 @@ export default function SignInScreen() {
             </View>
 
             <Text className="text-slate-300 font-bold mb-2">Password</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-2">
+            <View className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-2 ${isPasswordFocused ? 'border-blue-500' : 'border-slate-700'}`}>
               <Lock color="#94a3b8" size={20} />
               <TextInput
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
                 ref={passwordRef}
-                className="flex-1 text-white ml-3"
+                className="flex-1 text-white ml-3 outline-none"
                 placeholder="••••••••"
                 placeholderTextColor="#94a3b8"
                 value={password}
