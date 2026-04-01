@@ -130,6 +130,7 @@ export default function HomeScreen() {
   // Modal state for adding tags (Android/web fallback)
   const [showAddTagModal, setShowAddTagModal] = useState(false);
   const [newTagName, setNewTagName] = useState('');
+  const [isAddTagFocused, setIsAddTagFocused] = useState(false);
 
   // Show first 5 options when collapsed, all when expanded
   const MAX_VISIBLE = 5;
@@ -480,17 +481,33 @@ export default function HomeScreen() {
           >
             <Text className="text-white text-lg font-bold mb-2">Add Context Tag</Text>
             <Text className="text-slate-400 mb-4">Enter a name for your custom tag:</Text>
-            <TextInput
-              className="bg-slate-800 text-white px-4 py-3 rounded-xl border border-slate-700 mb-4"
-              placeholder="Tag name..."
-              placeholderTextColor="#64748b"
-              value={newTagName}
-              onChangeText={setNewTagName}
-              autoFocus
-              maxLength={30}
-              accessibilityLabel="Tag name"
-              accessibilityHint="Enter the name for your new context tag"
-            />
+            <View className={`flex-row items-center bg-slate-800 rounded-xl border ${isAddTagFocused ? 'border-blue-500' : 'border-slate-700'} px-4 py-3 mb-4`}>
+              <TextInput
+                className="flex-1 text-white"
+                style={{ outlineStyle: 'none' } as any}
+                placeholder="Tag name..."
+                placeholderTextColor="#64748b"
+                value={newTagName}
+                onChangeText={setNewTagName}
+                autoFocus
+                maxLength={30}
+                onFocus={() => setIsAddTagFocused(true)}
+                onBlur={() => setIsAddTagFocused(false)}
+                accessibilityLabel="Tag name"
+                accessibilityHint="Enter the name for your new context tag"
+              />
+              {newTagName.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => setNewTagName('')}
+                  accessibilityRole="button"
+                  accessibilityLabel="Clear tag name"
+                  hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                  className="ml-2"
+                >
+                  <X color="#94a3b8" size={20} />
+                </TouchableOpacity>
+              )}
+            </View>
             <View className="flex-row gap-3">
               <TouchableOpacity
                 onPress={() => setShowAddTagModal(false)}
