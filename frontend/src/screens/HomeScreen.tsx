@@ -352,6 +352,7 @@ export default function HomeScreen() {
                     }, 300);
                   }}
                   onBlur={() => setIsInputFocused(false)}
+                  style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                 />
                 {text.length > 0 && (
                   <TouchableOpacity
