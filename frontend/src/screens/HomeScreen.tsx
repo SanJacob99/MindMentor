@@ -129,6 +129,7 @@ export default function HomeScreen() {
 
   // Modal state for adding tags (Android/web fallback)
   const [showAddTagModal, setShowAddTagModal] = useState(false);
+  const [isTagInputFocused, setIsTagInputFocused] = useState(false);
   const [newTagName, setNewTagName] = useState('');
 
   // Show first 5 options when collapsed, all when expanded
@@ -330,6 +331,7 @@ export default function HomeScreen() {
                 className={`bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border ${isInputFocused ? 'border-blue-500' : 'border-slate-800'}`}
               >
                 <TextInput
+                  style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                   className="flex-1 text-white"
                   placeholder="Add optional note..."
                   placeholderTextColor="#64748b"
@@ -481,7 +483,10 @@ export default function HomeScreen() {
             <Text className="text-white text-lg font-bold mb-2">Add Context Tag</Text>
             <Text className="text-slate-400 mb-4">Enter a name for your custom tag:</Text>
             <TextInput
-              className="bg-slate-800 text-white px-4 py-3 rounded-xl border border-slate-700 mb-4"
+              onFocus={() => setIsTagInputFocused(true)}
+              onBlur={() => setIsTagInputFocused(false)}
+                  style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
+              className={`bg-slate-800 text-white px-4 py-3 rounded-xl border mb-4 ${isTagInputFocused ? 'border-blue-500' : 'border-slate-700'}`}
               placeholder="Tag name..."
               placeholderTextColor="#64748b"
               value={newTagName}
