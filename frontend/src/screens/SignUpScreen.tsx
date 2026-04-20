@@ -16,6 +16,7 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [focusedInput, setFocusedInput] = useState<'email' | 'password' | null>(null);
   const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigation<SignUpScreenNavigationProp>();
   const passwordRef = useRef<TextInput>(null);
@@ -61,10 +62,11 @@ export default function SignUpScreen() {
 
           <View>
             <Text className="text-slate-300 font-bold mb-2">Email Address</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-4">
-              <Mail color="#94a3b8" size={20} />
+            <View className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-4 ${focusedInput === 'email' ? 'border-blue-500' : 'border-slate-700'}`}>
+              <Mail color={focusedInput === 'email' ? "#3b82f6" : "#94a3b8"} size={20} />
               <TextInput
                 className="flex-1 text-white ml-3"
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                 placeholder="you@example.com"
                 placeholderTextColor="#94a3b8"
                 value={email}
@@ -78,10 +80,8 @@ export default function SignUpScreen() {
                 returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()}
                 blurOnSubmit={false}
-                keyboardType="email-address"
-                autoComplete="email"
-                textContentType="emailAddress"
-                autoCorrect={false}
+                onFocus={() => setFocusedInput('email')}
+                onBlur={() => setFocusedInput(null)}
               />
               {email.length > 0 && (
                 <TouchableOpacity
@@ -96,25 +96,26 @@ export default function SignUpScreen() {
             </View>
 
             <Text className="text-slate-300 font-bold mb-2">Password</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-6">
-              <Lock color="#94a3b8" size={20} />
+            <View className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-6 ${focusedInput === 'password' ? 'border-blue-500' : 'border-slate-700'}`}>
+              <Lock color={focusedInput === 'password' ? "#3b82f6" : "#94a3b8"} size={20} />
               <TextInput
                 ref={passwordRef}
                 className="flex-1 text-white ml-3"
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                 placeholder="••••••••"
                 placeholderTextColor="#94a3b8"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
+                autoCapitalize="none"
                 autoComplete="new-password"
                 textContentType="newPassword"
+                autoCorrect={false}
                 accessibilityLabel="Password"
                 returnKeyType="go"
                 onSubmitEditing={handleSignUp}
-                autoCapitalize="none"
-                autoComplete="password"
-                textContentType="newPassword"
-                autoCorrect={false}
+                onFocus={() => setFocusedInput('password')}
+                onBlur={() => setFocusedInput(null)}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}

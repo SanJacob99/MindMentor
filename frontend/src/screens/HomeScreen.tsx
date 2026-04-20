@@ -328,9 +328,11 @@ export default function HomeScreen() {
               <View
                 ref={noteInputRef}
                 className={`bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border ${isInputFocused ? 'border-blue-500' : 'border-slate-800'}`}
+                style={Platform.OS === 'web' && isInputFocused ? { boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.5)' } as any : undefined}
               >
                 <TextInput
                   className="flex-1 text-white"
+                  style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                   placeholder="Add optional note..."
                   placeholderTextColor="#64748b"
                   value={text}
@@ -480,17 +482,22 @@ export default function HomeScreen() {
           >
             <Text className="text-white text-lg font-bold mb-2">Add Context Tag</Text>
             <Text className="text-slate-400 mb-4">Enter a name for your custom tag:</Text>
-            <TextInput
-              className="bg-slate-800 text-white px-4 py-3 rounded-xl border border-slate-700 mb-4"
-              placeholder="Tag name..."
-              placeholderTextColor="#64748b"
-              value={newTagName}
-              onChangeText={setNewTagName}
-              autoFocus
-              maxLength={30}
-              accessibilityLabel="Tag name"
-              accessibilityHint="Enter the name for your new context tag"
-            />
+            <View className={`bg-slate-800 rounded-xl border px-4 py-3 mb-4 ${isInputFocused ? 'border-blue-500' : 'border-slate-700'}`} style={Platform.OS === 'web' && isInputFocused ? { boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.5)' } as any : undefined}>
+              <TextInput
+                className="text-white"
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
+                placeholder="Tag name..."
+                placeholderTextColor="#64748b"
+                value={newTagName}
+                onChangeText={setNewTagName}
+                autoFocus
+                maxLength={30}
+                accessibilityLabel="Tag name"
+                accessibilityHint="Enter the name for your new context tag"
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
+              />
+            </View>
             <View className="flex-row gap-3">
               <TouchableOpacity
                 onPress={() => setShowAddTagModal(false)}
