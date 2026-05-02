@@ -344,7 +344,11 @@ export default function InsightsScreen() {
                     {/* === TAGS SECTION === */}
                     {activeSection === 'tags' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
-                            {tagsLoading ? renderSectionLoading() : tagsData ? (
+                            {tagsLoading ? renderSectionLoading() : tagsData?.message ? (
+                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b' }}>
+                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>{tagsData.message}</Text>
+                                </View>
+                            ) : tagsData ? (
                                 <>
                                     <TagImpactChart tagAnalysis={tagsData.tagAnalysis || []} />
                                     {tagsData.combinations?.length > 0 && (
