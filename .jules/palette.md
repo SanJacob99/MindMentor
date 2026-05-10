@@ -68,3 +68,6 @@
 ## 2024-11-13 - Avoid Instructional Hints in Accessibility Attributes
 **Learning:** Hardcoding gesture instructions (like "Double tap to...") directly into `accessibilityLabel` creates redundancy since the OS naturally appends role-based actions (e.g., "button, double tap to activate"). Additionally, hardcoding "Double tap" in `accessibilityHint` is restrictive and assumes touch input, which may not be accurate for all assistive technologies (like voice control or switch access).
 **Action:** Use `accessibilityLabel` solely to describe what the element is or its current value. Use `accessibilityHint` to concisely describe the *result* of interacting with the element (e.g., "Opens the settings menu") without dictating *how* to interact.
+## 2026-05-10 - Focus States on Auth Forms
+**Learning:** Enhancing TextInputs with focus states is important for keyboard accessibility, but blindly using auto-replace diffs can accidentally remove vital, pre-existing attributes like `keyboardType` and `autoComplete`. These attributes are critical for mobile keyboards and password managers.
+**Action:** When adding UX focus enhancements to inputs, always carefully append the new `onFocus`/`onBlur` and styling props without overwriting or deleting any of the existing mobile semantic properties.
