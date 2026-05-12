@@ -126,6 +126,26 @@ export default function InsightsScreen() {
         </View>
     );
 
+    const renderEmptyState = (message: string) => (
+        <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 32, borderWidth: 1, borderColor: '#1e293b', alignItems: 'center' }}>
+            <View style={{ backgroundColor: '#1e293b', padding: 16, borderRadius: 9999, marginBottom: 16 }}>
+                <Sparkles size={32} color="#3b82f6" />
+            </View>
+            <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', marginBottom: 8 }}>More Data Needed</Text>
+            <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center', marginBottom: 24, lineHeight: 20 }}>
+                {message}
+            </Text>
+            <TouchableOpacity
+                style={{ backgroundColor: '#3b82f6', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}
+                onPress={() => navigation.navigate('Home')}
+                accessibilityRole="button"
+                accessibilityLabel="Check-in Now"
+            >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>Check-in Now</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
     return (
         <SafeAreaView className="flex-1 bg-slate-950" edges={['top', 'right', 'left']} style={{ flex: 1, backgroundColor: '#020617' }}>
             <ScrollView
@@ -310,9 +330,7 @@ export default function InsightsScreen() {
                     {activeSection === 'patterns' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
                             {patternsLoading ? renderSectionLoading() : patternsData?.message ? (
-                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b' }}>
-                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>{patternsData.message}</Text>
-                                </View>
+                                renderEmptyState(patternsData.message)
                             ) : patternsData ? (
                                 <>
                                     <PatternCard
@@ -344,7 +362,9 @@ export default function InsightsScreen() {
                     {/* === TAGS SECTION === */}
                     {activeSection === 'tags' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
-                            {tagsLoading ? renderSectionLoading() : tagsData ? (
+                            {tagsLoading ? renderSectionLoading() : tagsData?.message ? (
+                                renderEmptyState(tagsData.message)
+                            ) : tagsData ? (
                                 <>
                                     <TagImpactChart tagAnalysis={tagsData.tagAnalysis || []} />
                                     {tagsData.combinations?.length > 0 && (
@@ -383,9 +403,7 @@ export default function InsightsScreen() {
                     {activeSection === 'journal' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
                             {textLoading ? renderSectionLoading() : textData?.message ? (
-                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b' }}>
-                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>{textData.message}</Text>
-                                </View>
+                                renderEmptyState(textData.message)
                             ) : textData ? (
                                 <>
                                     {/* Sentiment overview */}
