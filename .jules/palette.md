@@ -68,3 +68,7 @@
 ## 2024-11-13 - Avoid Instructional Hints in Accessibility Attributes
 **Learning:** Hardcoding gesture instructions (like "Double tap to...") directly into `accessibilityLabel` creates redundancy since the OS naturally appends role-based actions (e.g., "button, double tap to activate"). Additionally, hardcoding "Double tap" in `accessibilityHint` is restrictive and assumes touch input, which may not be accurate for all assistive technologies (like voice control or switch access).
 **Action:** Use `accessibilityLabel` solely to describe what the element is or its current value. Use `accessibilityHint` to concisely describe the *result* of interacting with the element (e.g., "Opens the settings menu") without dictating *how* to interact.
+
+## 2026-11-20 - Empty State Placeholders (Update)
+**Learning:** When using new icons from libraries like `lucide-react-native` (e.g., `Sparkles`) to enhance empty states, omitting the explicit import statement causes fatal runtime crashes.
+**Action:** Always manually verify that any newly introduced icon components are appended to the file's import declarations before committing the change.
