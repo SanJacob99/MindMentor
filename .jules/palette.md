@@ -68,3 +68,7 @@
 ## 2024-11-13 - Avoid Instructional Hints in Accessibility Attributes
 **Learning:** Hardcoding gesture instructions (like "Double tap to...") directly into `accessibilityLabel` creates redundancy since the OS naturally appends role-based actions (e.g., "button, double tap to activate"). Additionally, hardcoding "Double tap" in `accessibilityHint` is restrictive and assumes touch input, which may not be accurate for all assistive technologies (like voice control or switch access).
 **Action:** Use `accessibilityLabel` solely to describe what the element is or its current value. Use `accessibilityHint` to concisely describe the *result* of interacting with the element (e.g., "Opens the settings menu") without dictating *how* to interact.
+
+## 2024-05-13 - Empty States for Data Visualization Endpoints
+**Learning:** Returning empty arrays for charts/visualizations without enough data can cause frontend rendering issues or show confusing blank charts.
+**Action:** When a data visualization endpoint lacks sufficient data, always return a `message` property indicating what the user needs to do (e.g., "Keep adding tags..."). On the frontend, explicitly check for this `message` property and render a styled text placeholder before attempting to render charts or tables.

@@ -378,6 +378,7 @@ export default async function insightRoutes(fastify: FastifyInstance) {
           combinations: [],
           negativeCorrelations: [],
           insights: [],
+          message: `Keep adding tags to your entries! We need more tagged entries to show analysis.`,
         });
       }
 
