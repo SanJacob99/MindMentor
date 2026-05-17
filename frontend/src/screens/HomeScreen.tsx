@@ -37,7 +37,7 @@ export default function HomeScreen() {
   const noteInputRef = useRef<View>(null);
 
   // Auto-save refs
-  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isAutoSubmittingRef = useRef(false);
   const INACTIVITY_DELAY_MS = 3000;
 
