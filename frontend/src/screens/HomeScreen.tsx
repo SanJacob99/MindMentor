@@ -37,7 +37,7 @@ export default function HomeScreen() {
   const noteInputRef = useRef<View>(null);
 
   // Auto-save refs
-  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isAutoSubmittingRef = useRef(false);
   const INACTIVITY_DELAY_MS = 3000;
 
@@ -328,9 +328,11 @@ export default function HomeScreen() {
               <View
                 ref={noteInputRef}
                 className={`bg-slate-950 rounded-xl flex-row items-center px-4 py-3 border ${isInputFocused ? 'border-blue-500' : 'border-slate-800'}`}
+                style={Platform.OS === 'web' && isInputFocused ? { boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.3)' } as any : undefined}
               >
                 <TextInput
                   className="flex-1 text-white"
+                  style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                   placeholder="Add optional note..."
                   placeholderTextColor="#64748b"
                   value={text}
