@@ -68,3 +68,7 @@
 ## 2024-11-13 - Avoid Instructional Hints in Accessibility Attributes
 **Learning:** Hardcoding gesture instructions (like "Double tap to...") directly into `accessibilityLabel` creates redundancy since the OS naturally appends role-based actions (e.g., "button, double tap to activate"). Additionally, hardcoding "Double tap" in `accessibilityHint` is restrictive and assumes touch input, which may not be accurate for all assistive technologies (like voice control or switch access).
 **Action:** Use `accessibilityLabel` solely to describe what the element is or its current value. Use `accessibilityHint` to concisely describe the *result* of interacting with the element (e.g., "Opens the settings menu") without dictating *how* to interact.
+
+## 2024-05-22 - Visual Focus States in Native Forms
+**Learning:** React Native `TextInput` components don't inherently provide a visible focus ring on all platforms, especially when wrapped in custom styled containers. Relying on default browser outlines on web leads to visual clashing with custom designs and a poor keyboard navigation experience.
+**Action:** Always implement explicit focus states by tracking `onFocus` / `onBlur`, dynamically updating the wrapper container's border/styling (and adding web box shadow if appropriate), and explicitly removing the default web outline via `style={{ outlineStyle: 'none' }}` on the input itself.

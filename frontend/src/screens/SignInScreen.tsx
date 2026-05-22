@@ -16,6 +16,8 @@ export default function SignInScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigation<SignInScreenNavigationProp>();
   const passwordRef = useRef<TextInput>(null);
@@ -61,7 +63,10 @@ export default function SignInScreen() {
 
           <View>
             <Text className="text-slate-300 font-bold mb-2">Email Address</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-4">
+            <View
+              className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-4 ${emailFocused ? 'border-blue-500' : 'border-slate-700'}`}
+              style={Platform.OS === 'web' && emailFocused ? { boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.3)' } as any : undefined}
+            >
               <Mail color="#94a3b8" size={20} />
               <TextInput
                 className="flex-1 text-white ml-3"
@@ -69,6 +74,9 @@ export default function SignInScreen() {
                 placeholderTextColor="#94a3b8"
                 value={email}
                 onChangeText={setEmail}
+                onFocus={() => setEmailFocused(true)}
+                onBlur={() => setEmailFocused(false)}
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoComplete="email"
@@ -78,10 +86,6 @@ export default function SignInScreen() {
                 returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()}
                 blurOnSubmit={false}
-                keyboardType="email-address"
-                autoComplete="email"
-                textContentType="emailAddress"
-                autoCorrect={false}
               />
               {email.length > 0 && (
                 <TouchableOpacity
@@ -96,7 +100,10 @@ export default function SignInScreen() {
             </View>
 
             <Text className="text-slate-300 font-bold mb-2">Password</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-2">
+            <View
+              className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-2 ${passwordFocused ? 'border-blue-500' : 'border-slate-700'}`}
+              style={Platform.OS === 'web' && passwordFocused ? { boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.3)' } as any : undefined}
+            >
               <Lock color="#94a3b8" size={20} />
               <TextInput
                 ref={passwordRef}
@@ -105,6 +112,9 @@ export default function SignInScreen() {
                 placeholderTextColor="#94a3b8"
                 value={password}
                 onChangeText={setPassword}
+                onFocus={() => setPasswordFocused(true)}
+                onBlur={() => setPasswordFocused(false)}
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                 secureTextEntry={!showPassword}
                 autoComplete="password"
                 textContentType="password"
@@ -112,8 +122,6 @@ export default function SignInScreen() {
                 returnKeyType="go"
                 onSubmitEditing={handleLogin}
                 autoCapitalize="none"
-                autoComplete="password"
-                textContentType="password"
                 autoCorrect={false}
               />
               <TouchableOpacity
