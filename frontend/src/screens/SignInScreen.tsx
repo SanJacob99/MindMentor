@@ -16,6 +16,8 @@ export default function SignInScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigation<SignInScreenNavigationProp>();
   const passwordRef = useRef<TextInput>(null);
@@ -61,7 +63,7 @@ export default function SignInScreen() {
 
           <View>
             <Text className="text-slate-300 font-bold mb-2">Email Address</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-4">
+            <View className={`flex-row items-center bg-slate-800 rounded-lg border ${emailFocused ? 'border-blue-500' : 'border-slate-700'} px-4 py-3 mb-4`}>
               <Mail color="#94a3b8" size={20} />
               <TextInput
                 className="flex-1 text-white ml-3"
@@ -71,17 +73,16 @@ export default function SignInScreen() {
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
-                autoComplete="email"
-                textContentType="emailAddress"
-                autoCorrect={false}
                 accessibilityLabel="Email Address"
                 returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()}
                 blurOnSubmit={false}
-                keyboardType="email-address"
                 autoComplete="email"
                 textContentType="emailAddress"
                 autoCorrect={false}
+                onFocus={() => setEmailFocused(true)}
+                onBlur={() => setEmailFocused(false)}
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
               />
               {email.length > 0 && (
                 <TouchableOpacity
@@ -96,7 +97,7 @@ export default function SignInScreen() {
             </View>
 
             <Text className="text-slate-300 font-bold mb-2">Password</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-2">
+            <View className={`flex-row items-center bg-slate-800 rounded-lg border ${passwordFocused ? 'border-blue-500' : 'border-slate-700'} px-4 py-3 mb-2`}>
               <Lock color="#94a3b8" size={20} />
               <TextInput
                 ref={passwordRef}
@@ -106,8 +107,6 @@ export default function SignInScreen() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
-                autoComplete="password"
-                textContentType="password"
                 accessibilityLabel="Password"
                 returnKeyType="go"
                 onSubmitEditing={handleLogin}
@@ -115,6 +114,9 @@ export default function SignInScreen() {
                 autoComplete="password"
                 textContentType="password"
                 autoCorrect={false}
+                onFocus={() => setPasswordFocused(true)}
+                onBlur={() => setPasswordFocused(false)}
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
