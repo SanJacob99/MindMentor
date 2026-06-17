@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '../navigation/RootNavigator';
 import { useInsightsSummary, usePatterns, useTagAnalysis, useTextAnalysis } from '../hooks/useInsights';
-import { Sparkles } from 'lucide-react-native';
+import { Sparkles, PenLine } from 'lucide-react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 import Header from '../components/Header';
 import PatternCard from '../components/PatternCard';
@@ -20,6 +20,26 @@ type TabType = 'mood' | 'stress' | 'energy';
 type SectionType = 'overview' | 'patterns' | 'tags' | 'journal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+
+const SectionEmptyState = ({ message, icon: Icon, onAction }: { message: string, icon: any, onAction: () => void }) => (
+    <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 32, borderWidth: 1, borderColor: '#1e293b', alignItems: 'center' }}>
+        <View style={{ backgroundColor: '#1e293b', padding: 16, borderRadius: 50, marginBottom: 16 }}>
+            <Icon size={32} color="#3b82f6" />
+        </View>
+        <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', marginBottom: 8, textAlign: 'center' }}>Need More Data</Text>
+        <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center', marginBottom: 24, lineHeight: 20 }}>
+            {message}
+        </Text>
+        <TouchableOpacity
+            onPress={onAction}
+            accessibilityRole="button"
+            accessibilityLabel="Log an entry"
+            style={{ backgroundColor: '#3b82f6', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}
+        >
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>Log an Entry</Text>
+        </TouchableOpacity>
+    </View>
+);
 
 const SCATTER_DATA = [
     { id: 'ENV', label: 'Environment', values: [2, 3, 2.5, 3.5, 1.5] },
@@ -310,9 +330,11 @@ export default function InsightsScreen() {
                     {activeSection === 'patterns' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
                             {patternsLoading ? renderSectionLoading() : patternsData?.message ? (
-                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b' }}>
-                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>{patternsData.message}</Text>
-                                </View>
+                                <SectionEmptyState
+                                    message={patternsData.message}
+                                    icon={Sparkles}
+                                    onAction={() => navigation.navigate('Home')}
+                                />
                             ) : patternsData ? (
                                 <>
                                     <PatternCard
@@ -344,7 +366,13 @@ export default function InsightsScreen() {
                     {/* === TAGS SECTION === */}
                     {activeSection === 'tags' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
-                            {tagsLoading ? renderSectionLoading() : tagsData ? (
+                            {tagsLoading ? renderSectionLoading() : tagsData?.message ? (
+                                <SectionEmptyState
+                                    message={tagsData.message}
+                                    icon={Sparkles}
+                                    onAction={() => navigation.navigate('Home')}
+                                />
+                            ) : tagsData ? (
                                 <>
                                     <TagImpactChart tagAnalysis={tagsData.tagAnalysis || []} />
                                     {tagsData.combinations?.length > 0 && (
@@ -383,9 +411,11 @@ export default function InsightsScreen() {
                     {activeSection === 'journal' && (
                         <View style={{ paddingHorizontal: 20, gap: 20 }}>
                             {textLoading ? renderSectionLoading() : textData?.message ? (
-                                <View style={{ backgroundColor: '#0f172a', borderRadius: 16, padding: 24, borderWidth: 1, borderColor: '#1e293b' }}>
-                                    <Text style={{ color: '#94a3b8', fontSize: 14, textAlign: 'center' }}>{textData.message}</Text>
-                                </View>
+                                <SectionEmptyState
+                                    message={textData.message}
+                                    icon={PenLine}
+                                    onAction={() => navigation.navigate('Home')}
+                                />
                             ) : textData ? (
                                 <>
                                     {/* Sentiment overview */}
