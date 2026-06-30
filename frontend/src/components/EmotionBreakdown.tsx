@@ -77,7 +77,12 @@ export default function EmotionBreakdown({ breakdown, primary }: Props) {
       {/* Legend */}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
         {breakdown.map((item) => (
-          <View key={item.emotion} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <View
+            key={item.emotion}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
+            accessible={true}
+            accessibilityLabel={`${EMOTION_LABELS[item.emotion] || item.emotion} ${item.percentage}%`}
+          >
             <View style={{
               width: 8, height: 8, borderRadius: 4,
               backgroundColor: EMOTION_COLORS[item.emotion] || '#64748b',
