@@ -2,38 +2,30 @@
 > frontend@1.0.0 web /app/frontend
 > expo start --web
 
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
-Starting project at /app/frontend
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
 [dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+Starting project at /app/frontend
+[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
 [dotenv@17.2.4] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
 Starting Metro Bundler
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-[dotenv@17.2.4] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
-[dotenv@17.2.4] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 50.5% (116/224)
-Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 50.5% ( 253/2077)
-Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 50.5% ( 780/2266)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 72.8% (1933/2266)
-| [dotenv@17.2.4] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 87.1% (2438/2622)
-Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.0% (2845/2859)
-Web Bundled 21721ms index.ts (2861 modules)
- LOG  [web] Logs will appear in the browser console
-Web Bundled 158ms index.ts (1 module)
-Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
- LOG  [web] Logs will appear in the browser console
-Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 187ms index.ts (1 module)
- LOG  [web] Logs will appear in the browser console
-Web Bundled 99ms index.ts (1 module)
- LOG  [web] Logs will appear in the browser console
-Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-Web Bundled 98ms index.ts (1 module)
+| Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+|   npx update-browserslist-db@latest
+|   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 53.9% (124/268)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 53.9% ( 285/2162)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 53.9% ( 746/2334)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 71.5% (1974/2334)
+| [dotenv@17.2.4] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 87.4% (2462/2633)
+Web Bundled 21167ms index.ts (2861 modules)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (2861/2861)
  LOG  [web] Logs will appear in the browser console

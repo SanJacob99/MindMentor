@@ -68,3 +68,7 @@
 ## 2024-11-13 - Avoid Instructional Hints in Accessibility Attributes
 **Learning:** Hardcoding gesture instructions (like "Double tap to...") directly into `accessibilityLabel` creates redundancy since the OS naturally appends role-based actions (e.g., "button, double tap to activate"). Additionally, hardcoding "Double tap" in `accessibilityHint` is restrictive and assumes touch input, which may not be accurate for all assistive technologies (like voice control or switch access).
 **Action:** Use `accessibilityLabel` solely to describe what the element is or its current value. Use `accessibilityHint` to concisely describe the *result* of interacting with the element (e.g., "Opens the settings menu") without dictating *how* to interact.
+
+## 2027-02-18 - TextInput Focus Rings & Mobile Regressions
+**Learning:** When adding focus rings to `TextInput` (especially on Web), replacing or heavily modifying the `TextInput` properties can accidentally remove essential mobile-specific accessibility and UX properties (like `keyboardType`, `autoComplete`, and `textContentType`).
+**Action:** Always verify the full file context first using `read_file` or `grep` before modifying `TextInput` components. Meticulously ensure the `REPLACE` block in `replace_with_git_merge_diff` includes all preexisting properties of the target components to prevent accidental regressions.
