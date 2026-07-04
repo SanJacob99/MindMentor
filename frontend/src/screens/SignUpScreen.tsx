@@ -16,6 +16,8 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigation<SignUpScreenNavigationProp>();
   const passwordRef = useRef<TextInput>(null);
@@ -61,14 +63,20 @@ export default function SignUpScreen() {
 
           <View>
             <Text className="text-slate-300 font-bold mb-2">Email Address</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-4">
+            <View
+              className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-4 ${isEmailFocused ? 'border-blue-500' : 'border-slate-700'}`}
+              style={Platform.OS === 'web' && isEmailFocused ? { boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.5)' } as any : undefined}
+            >
               <Mail color="#94a3b8" size={20} />
               <TextInput
                 className="flex-1 text-white ml-3"
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                 placeholder="you@example.com"
                 placeholderTextColor="#94a3b8"
                 value={email}
                 onChangeText={setEmail}
+                onFocus={() => setIsEmailFocused(true)}
+                onBlur={() => setIsEmailFocused(false)}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoComplete="email"
@@ -78,10 +86,6 @@ export default function SignUpScreen() {
                 returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()}
                 blurOnSubmit={false}
-                keyboardType="email-address"
-                autoComplete="email"
-                textContentType="emailAddress"
-                autoCorrect={false}
               />
               {email.length > 0 && (
                 <TouchableOpacity
@@ -96,15 +100,21 @@ export default function SignUpScreen() {
             </View>
 
             <Text className="text-slate-300 font-bold mb-2">Password</Text>
-            <View className="flex-row items-center bg-slate-800 rounded-lg border border-slate-700 px-4 py-3 mb-6">
+            <View
+              className={`flex-row items-center bg-slate-800 rounded-lg border px-4 py-3 mb-6 ${isPasswordFocused ? 'border-blue-500' : 'border-slate-700'}`}
+              style={Platform.OS === 'web' && isPasswordFocused ? { boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.5)' } as any : undefined}
+            >
               <Lock color="#94a3b8" size={20} />
               <TextInput
                 ref={passwordRef}
                 className="flex-1 text-white ml-3"
+                style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                 placeholder="••••••••"
                 placeholderTextColor="#94a3b8"
                 value={password}
                 onChangeText={setPassword}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
                 secureTextEntry={!showPassword}
                 autoComplete="new-password"
                 textContentType="newPassword"
@@ -112,8 +122,6 @@ export default function SignUpScreen() {
                 returnKeyType="go"
                 onSubmitEditing={handleSignUp}
                 autoCapitalize="none"
-                autoComplete="password"
-                textContentType="newPassword"
                 autoCorrect={false}
               />
               <TouchableOpacity
