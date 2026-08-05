@@ -27,6 +27,7 @@ export default function HomeScreen() {
   const [text, setText] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isTagInputFocused, setIsTagInputFocused] = useState(false);
 
   const { mutateAsync: addEntry, isPending: submitting } = useAddEntry();
   const { data: entries } = useEntries();
@@ -37,7 +38,7 @@ export default function HomeScreen() {
   const noteInputRef = useRef<View>(null);
 
   // Auto-save refs
-  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isAutoSubmittingRef = useRef(false);
   const INACTIVITY_DELAY_MS = 3000;
 
@@ -331,6 +332,7 @@ export default function HomeScreen() {
               >
                 <TextInput
                   className="flex-1 text-white"
+                  style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                   placeholder="Add optional note..."
                   placeholderTextColor="#64748b"
                   value={text}
@@ -481,11 +483,14 @@ export default function HomeScreen() {
             <Text className="text-white text-lg font-bold mb-2">Add Context Tag</Text>
             <Text className="text-slate-400 mb-4">Enter a name for your custom tag:</Text>
             <TextInput
-              className="bg-slate-800 text-white px-4 py-3 rounded-xl border border-slate-700 mb-4"
+              className={`bg-slate-800 text-white px-4 py-3 rounded-xl border mb-4 ${isTagInputFocused ? 'border-blue-500' : 'border-slate-700'}`}
+              style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
               placeholder="Tag name..."
               placeholderTextColor="#64748b"
               value={newTagName}
               onChangeText={setNewTagName}
+              onFocus={() => setIsTagInputFocused(true)}
+              onBlur={() => setIsTagInputFocused(false)}
               autoFocus
               maxLength={30}
               accessibilityLabel="Tag name"

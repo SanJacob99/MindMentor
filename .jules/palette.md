@@ -68,3 +68,7 @@
 ## 2024-11-13 - Avoid Instructional Hints in Accessibility Attributes
 **Learning:** Hardcoding gesture instructions (like "Double tap to...") directly into `accessibilityLabel` creates redundancy since the OS naturally appends role-based actions (e.g., "button, double tap to activate"). Additionally, hardcoding "Double tap" in `accessibilityHint` is restrictive and assumes touch input, which may not be accurate for all assistive technologies (like voice control or switch access).
 **Action:** Use `accessibilityLabel` solely to describe what the element is or its current value. Use `accessibilityHint` to concisely describe the *result* of interacting with the element (e.g., "Opens the settings menu") without dictating *how* to interact.
+
+## 2026-08-05 - Focus States in React Native Text Inputs
+**Learning:** Text inputs in React Native lack a clear visual focus state on mobile by default, and on web, they show a default browser focus ring that clashes with custom styling and often overrides Tailwind classes like `outline-none`. This leads to an unpolished and inconsistent experience across platforms.
+**Action:** Always implement a visible focus state (e.g., updating the border color via an `isFocused` state) when building custom inputs. To prevent default web browser focus rings from clashing, explicitly apply `style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}` to the `TextInput`.
