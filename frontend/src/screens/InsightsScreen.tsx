@@ -182,6 +182,7 @@ export default function InsightsScreen() {
                                     onPress={() => setRange(r)}
                                     accessibilityRole="tab"
                                     accessibilityState={{ selected: range === r }}
+                                    accessibilityLabel={r === '30d' ? '30 Days' : '90 Days'}
                                     style={{
                                         paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8,
                                         backgroundColor: range === r ? '#1e293b' : 'transparent',
