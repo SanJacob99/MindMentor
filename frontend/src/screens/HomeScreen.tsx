@@ -331,6 +331,7 @@ export default function HomeScreen() {
               >
                 <TextInput
                   className="flex-1 text-white"
+                  style={Platform.OS === 'web' ? { outlineStyle: 'none' } as any : undefined}
                   placeholder="Add optional note..."
                   placeholderTextColor="#64748b"
                   value={text}
